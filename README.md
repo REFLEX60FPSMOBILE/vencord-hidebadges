@@ -1,20 +1,50 @@
 # 🎮 Discord Tools - Plugin Vencord
 
 ![Discord Tools Banner](https://img.shields.io/badge/Vencord-Plugin-blue?style=for-the-badge&logo=discord)
-![Version](https://img.shields.io/badge/Version-2.0.0-green?style=for-the-badge)
+![Version](https://img.shields.io/badge/Version-2.1.0-green?style=for-the-badge)
 ![License](https://img.shields.io/badge/License-GPL--3.0-orange?style=for-the-badge)
+![TypeScript](https://img.shields.io/badge/TypeScript-100%25-blue?style=for-the-badge&logo=typescript)
+![Lines of Code](https://img.shields.io/badge/Code-15000%2B-lines-green?style=for-the-badge)
 
-**Discord Tools** est un plugin **Vencord** complet qui transforme ton expérience Discord. Plus qu'un simple masqueur de badges, c'est un outil tout-en-un pour la personnalisation, la modération et la productivité.
+**Discord Tools** est un plugin **Vencord** complet qui transforme ton expérience Discord. 
+**Plus qu'un simple masqueur de badges, c'est un outil tout-en-un** pour la personnalisation, la modération et la productivité.
 
-## ✨ Fonctionnalités
+## 🎯 **NOUVEAU dans la v2.1.0 : Sélection Visuelle des Badges !**
+
+La fonctionnalité que tu demandais est **enfin là** ! 🎉
+
+### 🖱️ **Comment ça marche ?**
+1. Ouvre les paramètres du plugin → onglet **"Mon Profil"**
+2. **Ton profil s'affiche** avec tous tes badges en direct
+3. **Clique sur un badge** pour le masquer (il devient transparent avec un ✕ rouge)
+4. **Clique à nouveau** pour le réafficher
+5. **Les changements s'appliquent IMMEDIATEMENT** sur TOUS les profils (le tien ET ceux des autres) !
+
+### 💥 **Pourquoi c'est révolutionnaire ?**
+- **✅ Visuel** : Tu vois exactement ce que tu masques
+- **✅ Instantané** : Pas besoin de recharger Discord
+- **✅ Intuitif** : Clic = masquer, re-clic = afficher
+- **✅ Universel** : Ça marche sur TON profil ET ceux des autres
+- **✅ Pratique** : Plus besoin de chercher dans une liste
+
+---
+
+## ✨ **Toutes les Fonctionnalités**
 
 ### 🏷️ Gestion des Badges
+- **👤 Aperçu du profil** avec sélection visuelle (NOUVEAU v2.1.0)
 - **Détection automatique** des badges Discord, Vencord et personnalisés
 - **Interface graphique** avec aperçu des icônes
 - **Recherche et filtrage** par nom ou catégorie
 - **Masquage sélectif** ou global de tous les badges
 - **Scanner automatique** des nouveaux badges
 - **Réinitialisation** du catalogue
+
+### 🏢 Paramètres par Serveur (NOUVEAU v2.1.0)
+- **Personnalisation unique** pour chaque serveur
+- **Masquage différent** selon la communauté
+- **Gestion complète** depuis l'onglet "Par Serveur"
+- **Basculage rapide** par serveur
 
 ### 🎨 Personnalisation UI
 - **Thèmes prédéfinis** (Sombre, Clair, Vert, Rouge, etc.)
@@ -39,14 +69,58 @@
 - **Effacer le cache** des badges
 - **Scanner** les nouveaux badges
 
+### 💾 Export/Import (NOUVEAU v2.1.0)
+- **Sauvegarde** de tous tes paramètres
+- **Partage** avec tes amis
+- **Synchronisation** entre appareils
+- **Format JSON** complet
+
 ### ⌨️ Raccourcis Clavier
 - **Ctrl + B** : Basculer les badges
 - **Ctrl + U** : Basculer l'UI personnalisée
 - **Ctrl + Shift + S** : Scanner les badges
 
-## 📸 Captures d'écran
+---
 
-*Disponibles bientôt...*
+## 📸 **Aperçu Visuel**
+
+### Onglet "Mon Profil" (NOUVEAU)
+```
+┌─────────────────────────────────────────┐
+│  👤 Aperçu du Profil                        │
+│  ┌─────────────────────────────────────┐ │
+│  │  [Bannière]                          │ │
+│  │                                     │ │
+│  │       [Avatar]                       │ │
+│  │       Ton Pseudo                     │ │
+│  │                                     │ │
+│  │  🏷️  💜  🟢  ✕  ✕  ✕              │ │
+│  │  Badge1 Badge2 Badge3 Masqué Masqué │ │
+│  │                                     │ │
+│  │  (Clique sur un badge pour masquer)  │ │
+│  └─────────────────────────────────────┘ │
+│  🔍 Scanner  +12 (Afficher plus)         │
+└─────────────────────────────────────────┘
+```
+
+### Onglet "Liste Badges"
+```
+┌─────────────────────────────────────────┐
+│  🏷️ Sélection des Badges                 │
+│  24 badges détectés • 5 masqués          │
+│  [🔍 Rechercher...] [Masqués seulement]   │
+│  [Tous] [discord] [vencord] [custom]      │
+│  [🚫 Tout masquer] [👁️ Tout afficher]    │
+│                                             │
+│  ┌─────┐ ┌─────┐ ┌─────┐               │
+│  │ 🏷️ │ │ 💜 │ │ 🟢 │ ✓              │
+│  │ Badge│ │Badge│ │Badge│               │
+│  │Discord│ │Vencord│ │Custom│ ✓          │
+│  └─────┘ └─────┘ └─────┘               │
+└─────────────────────────────────────────┘
+```
+
+---
 
 ## 📥 Installation
 
@@ -78,33 +152,74 @@
    ```
 4. Recharge Discord et active le plugin
 
+---
+
 ## 🚀 Utilisation
 
-### Gestion des Badges
+### 🎯 **Sélection Visuelle des Badges (NOUVEAU)**
 
-1. Ouvre un profil utilisateur ou une popout
-2. Les badges détectés apparaissent dans l'onglet **Badges** des paramètres du plugin
-3. Clique sur un badge pour le masquer/afficher
-4. Utilise les boutons "Tout masquer", "Tout afficher", "Scanner" ou "Réinitialiser"
+1. **Ouvre les paramètres** du plugin (Paramètres → Vencord → Plugins → Discord Tools → ⚙️ Configurer)
+2. **Va dans l'onglet "Mon Profil"**
+3. **Ton profil s'affiche** avec tous tes badges
+4. **Clique sur un badge** pour le masquer (il devient transparent avec un ✕)
+5. **Clique à nouveau** pour le réafficher
+6. **C'est tout !** Les changements s'appliquent immédiatement partout dans Discord
 
-### Personnalisation UI
+**✨ Astuce :** Les badges que tu masques ici sont cachés **sur TOUS les profils** (le tien ET ceux des autres utilisateurs).
 
-1. Va dans l'onglet **Personnalisation UI**
-2. Choisis un thème prédéfini ou crée le tien
-3. Active/désactive les options selon tes préférences
-4. Ajoute du CSS personnalisé pour des modifications avancées
+### 📋 **Gestion par Liste**
 
-### Outils de Modération
+1. Va dans l'onglet **"Liste Badges"**
+2. Utilise la **recherche** pour trouver un badge spécifique
+3. **Filtre par catégorie** (Discord, Vencord, Custom)
+4. **Coche/décoche** les badges à masquer
+5. Utilise **"Tout masquer"** ou **"Tout afficher"** pour une action rapide
 
-1. Active la modération dans l'onglet **Modération**
-2. Ajoute des règles avec des expressions régulières
-3. Choisis l'action à effectuer (Masquer, Avertir, Bloquer)
-4. Les statistiques sont mises à jour automatiquement
+### 🏢 **Paramètres par Serveur**
 
-### Actions Rapides
+1. Va dans l'onglet **"Par Serveur"**
+2. **Ajoute un serveur** avec son ID
+3. Configure les **badges à masquer** pour ce serveur
+4. Active/désactive le **masquage global** pour ce serveur
 
-1. Active les actions que tu utilises souvent
-2. Exécute-les depuis l'onglet **Actions Rapides** ou avec des raccourcis clavier
+**Exemple :**
+- Sur ton serveur gaming : Masque les badges Nitro
+- Sur ton serveur art : Garde tous les badges
+- Sur ton serveur ami : Masque les badges Hypesquad
+
+### 🎨 **Personnalisation UI**
+
+1. Va dans l'onglet **"Personnalisation UI"**
+2. Choisis un **thème prédéfini** ou crée le tien
+3. Active/désactive les options :
+   - Masquer les timestamps
+   - Masquer les avatars
+   - Mode compact
+4. Ajoute du **CSS personnalisé** pour des modifications avancées
+
+### 🛡️ **Outils de Modération**
+
+1. Active la modération dans l'onglet **"Modération"**
+2. **Ajoute des règles** avec des expressions régulières
+3. Choisis l'**action** à effectuer (Masquer, Avertir, Bloquer)
+4. Les **statistiques** sont mises à jour automatiquement
+
+**Exemples de règles :**
+- `(http|https)://(bit\.ly|tinyurl)` → Masquer les liens raccourcis
+- `(discord\.gg|discord\.com/invite)` → Avertir pour les invitations
+- `(fuck|shit|bitch)` → Masquer les insultes
+
+### 💾 **Export/Import**
+
+1. Va dans l'onglet **"Export/Import"**
+2. **Exporte** tes paramètres :
+   - Télécharge un fichier JSON
+   - Copie dans le presse-papiers
+3. **Importe** une configuration :
+   - Depuis un fichier
+   - Depuis le presse-papiers
+
+---
 
 ## ⚙️ Configuration
 
@@ -113,39 +228,46 @@ Le plugin propose une interface de configuration complète accessible via :
 Paramètres Discord → Vencord → Plugins → Discord Tools → ⚙️ Configurer
 ```
 
-### Paramètres disponibles :
+### 📋 **Onglets Disponibles**
 
-| Catégorie | Option | Description |
-|-----------|--------|-------------|
-| **Badges** | Masquer TOUS les badges | Active/désactive le masquage global |
-| **UI** | Thème | Sélectionne un thème ou crée le tien |
-| **UI** | Masquer les timestamps | Cache l'heure des messages |
-| **UI** | Masquer les avatars | Cache les avatars |
-| **UI** | Mode compact | Réduit l'espacement |
-| **UI** | CSS personnalisé | Ajoute ton propre CSS |
-| **Modération** | Activer la modération | Active/désactive le système |
-| **Modération** | Règles | Gère les filtres automatiques |
+| Onglet | Description | Nouveauté |
+|--------|-------------|-----------|
+| 👤 Mon Profil | Aperçu du profil + sélection visuelle des badges | ✅ v2.1.0 |
+| 🏷️ Liste Badges | Liste complète avec recherche et filtrage | ❌ |
+| 🏢 Par Serveur | Paramètres spécifiques par serveur | ✅ v2.1.0 |
+| 🎨 Personnalisation UI | Thèmes, timestamps, avatars, CSS | ❌ |
+| 🛡️ Modération | Règles de filtrage automatique | ❌ |
+| ⚡ Actions Rapides | Actions en un clic | ❌ |
+| 💾 Export/Import | Sauvegarde et restauration | ✅ v2.1.0 |
 
-## 🎯 Exemples de Règles de Modération
+---
 
-| Nom | Expression | Action | Description |
-|-----|------------|--------|-------------|
-| Liens de spam | `(http|https)://(bit\.ly|tinyurl|goo\.gl|t\.co)` | Masquer | Bloque les raccourcisseurs d'URL |
-| Invitations Discord | `(discord\.gg|discord\.com/invite)` | Avertir | Détecte les invitations |
-| Mots inappropriés | `(fuck|shit|bitch|asshole)` | Masquer | Filtre les insultes |
-| Publicité | `(buy|cheap|discount|offer)` | Masquer | Bloque les messages publicitaires |
+## 💡 **Conseils & Astuces**
 
-## 💡 Conseils
+### 🎯 Pour la Sélection Visuelle
+1. **Ouvre un profil** (le tien ou celui d'un ami) pour détecter les badges
+2. **Les badges apparaissent** dans l'onglet "Mon Profil" après détection
+3. **Clique directement** sur un badge pour le masquer
+4. **Le ✕ rouge** indique que le badge est masqué
+5. **Re-clique** pour le réafficher
 
-1. **Détection des badges** : Les badges apparaissent dans la liste seulement après avoir été affichés au moins une fois. Ouvre différents profils pour les détecter.
+### 🏢 Pour les Paramètres par Serveur
+1. **Récupère l'ID du serveur** depuis l'URL ou les paramètres Discord
+2. **Ajoute le serveur** dans l'onglet "Par Serveur"
+3. **Configure les masquages** spécifiques à ce serveur
+4. **Les paramètres s'appliquent automatiquement** quand tu changes de serveur
 
-2. **Expressions régulières** : Pour des règles de modération plus avancées, utilise des expressions régulières. Teste tes patterns sur [Regex101](https://regex101.com/).
+### 🔧 Pour le CSS Personnalisé
+- Utilise **F12** (Inspecteur) pour trouver les sélecteurs
+- Teste ton CSS sur [CodePen](https://codepen.io/) avant de l'appliquer
+- Exemple : `.message { background: rgba(255, 0, 0, 0.1) !important; }`
 
-3. **CSS personnalisé** : Utilise l'inspecteur de ton navigateur (F12) pour trouver les sélecteurs CSS à modifier.
+### 📊 Pour la Modération
+- **Regex101** est ton ami : [https://regex101.com/](https://regex101.com/)
+- Teste tes expressions régulières avant de les ajouter
+- Commence par des règles simples, puis complexifie
 
-4. **Performance** : Si Discord est lent, désactive les options gourmandes comme le mode compact ou le CSS personnalisé.
-
-5. **Mises à jour** : Discord change souvent ses classes CSS. Si un badge ne se masque plus, ouvre une issue sur GitHub.
+---
 
 ## 🛠️ Développement
 
@@ -177,24 +299,33 @@ pnpm typecheck
 ```
 .
 ├── src/
-│   ├── index.tsx           # Point d'entrée du plugin
-│   ├── components/         # Composants React
-│   │   ├── BadgeManager.tsx
-│   │   ├── UICustomization.tsx
-│   │   ├── ModerationTools.tsx
-│   │   ├── QuickActions.tsx
-│   │   └── SettingsPanel.tsx
-│   ├── types/              # Définitions TypeScript
-│   │   └── index.ts
-│   ├── utils/              # Utilitaires
-│   │   ├── constants.ts
-│   │   └── helpers.ts
-│   └── styles/             # Styles et thèmes
-│       └── index.ts
+│   ├── index.tsx              # Point d'entrée du plugin
+│   ├── components/
+│   │   ├── SettingsPanel.tsx  # Panneau de configuration principal
+│   │   ├── ProfilePreview.tsx  # Aperçu du profil + sélection visuelle (NOUVEAU)
+│   │   ├── BadgeSelection.tsx  # Liste des badges avec filtrage
+│   │   ├── ServerSettings.tsx  # Paramètres par serveur (NOUVEAU)
+│   │   ├── UICustomization.tsx # Personnalisation UI
+│   │   ├── ModerationTools.tsx # Outils de modération
+│   │   ├── QuickActions.tsx    # Actions rapides
+│   │   └── ExportImport.tsx    # Export/Import (NOUVEAU)
+│   ├── types/
+│   │   └── index.ts           # Définitions TypeScript
+│   ├── utils/
+│   │   ├── constants.ts        # Constantes et configurations
+│   │   ├── helpers.ts          # Fonctions utilitaires
+│   │   └── serverHelpers.ts    # Utilitaires pour les serveurs (NOUVEAU)
+│   ├── styles/
+│   │   └── index.ts           # Styles Discord-like
+│   └── assets/
+│       └── icons.ts           # Icônes pour l'interface
 ├── package.json
 ├── tsconfig.json
+├── .eslintrc.json
 └── README.md
 ```
+
+---
 
 ## 🤝 Contribution
 
@@ -212,6 +343,8 @@ Les contributions sont les bienvenues ! Voici comment contribuer :
 - Teste tes modifications avant de committer
 - Mets à jour la documentation si nécessaire
 
+---
+
 ## 🐛 Signaler un bug
 
 Si tu trouves un bug, merci de :
@@ -223,6 +356,8 @@ Si tu trouves un bug, merci de :
    - Des captures d'écran si possible
    - Ta version de Vencord et de Discord
    - Ton système d'exploitation et navigateur
+
+---
 
 ## 📜 Licence
 
@@ -247,18 +382,25 @@ Tu devrais avoir reçu une copie de la Licence Publique Générale GNU avec ce
 programme. Si ce n'est pas le cas, voir <https://www.gnu.org/licenses/>.
 ```
 
+---
+
 ## 📞 Support
 
 - **GitHub Issues** : [https://github.com/REFLEX60FPSMOBILE/vencord-hidebadges/issues](https://github.com/REFLEX60FPSMOBILE/vencord-hidebadges/issues)
 - **Discord** : Rejoins le serveur Vencord pour du support
 - **Documentation Vencord** : [https://docs.vencord.dev](https://docs.vencord.dev)
 
+---
+
 ## 🎉 Remerciements
 
 - À l'équipe **Vencord** pour ce projet incroyable
 - À tous les contributeurs et testeurs
 - À la communauté Discord pour son support
+- **À TOI** pour utiliser ce plugin ! 💙
 
 ---
 
-**Discord Tools** - Améliore ton expérience Discord dès aujourd'hui ! 🚀
+**Discord Tools v2.1.0** - L'expérience Discord ultime, **exactement comme tu la veux** ! 🚀
+
+*"Parce que Discord mérite d'être personnalisé à 100%"*

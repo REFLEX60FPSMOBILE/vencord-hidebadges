@@ -91,6 +91,28 @@ export interface QuickAction {
     category: string;
 }
 
+// Types pour les paramètres par serveur
+export interface ServerSettings {
+    hideBadges: boolean;
+    hiddenBadges: Record<string, boolean>;
+}
+
+// Types pour l'export/import
+export interface ExportData {
+    version: string;
+    timestamp: number;
+    settings: {
+        hideAllBadges: boolean;
+        hiddenBadges: Record<string, boolean>;
+        badgeCatalog: Record<string, BadgeInfo>;
+        uiSettings: UICustomization;
+        moderationRules: ModerationRule[];
+        moderationStats: ModerationStats;
+        enabledQuickActions: Record<string, boolean>;
+    };
+    serverSettings: Record<string, ServerSettings>;
+}
+
 // Types pour les notifications
 export interface Notification {
     id: string;

@@ -1,11 +1,14 @@
 import React, { useState, useCallback, useMemo } from "react";
 import { CardStyles, ButtonStyles, TabStyles } from "@styles";
 import { DiscordColors } from "@styles";
-import BadgeManager from "./BadgeManager";
+import ProfilePreview from "./ProfilePreview";
+import BadgeSelection from "./BadgeSelection";
 import UICustomizationPanel from "./UICustomization";
 import ModerationTools from "./ModerationTools";
 import QuickActions from "./QuickActions";
-import { BadgeInfo, UICustomization, ModerationRule, ModerationStats, QuickAction } from "@types";
+import ServerSettings from "./ServerSettings";
+import ExportImport from "./ExportImport";
+import { BadgeInfo, UICustomization, ModerationRule, ModerationStats, QuickAction, ServerSettings, ExportData } from "@types";
 
 interface SettingsPanelProps {
     // Badges
@@ -36,6 +39,16 @@ interface SettingsPanelProps {
     enabledQuickActions: Record<string, boolean>;
     onQuickActionToggle: (id: string) => void;
     onQuickActionExecute: (id: string) => void;
+    
+    // Server Settings
+    serverSettings: Record<string, ServerSettings>;
+    currentServerId: string | null;
+    onUpdateServerSettings: (serverId: string, updates: Partial<ServerSettings>) => void;
+    onResetServer: (serverId: string) => void;
+    
+    // Export/Import
+    onExport: () => ExportData;
+    onImport: (data: ExportData) => void;
 }
 
 const SettingsPanel: React.FC<SettingsPanelProps> = ({
@@ -67,28 +80,58 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
     enabledQuickActions,
     onQuickActionToggle,
     onQuickActionExecute,
+    
+    // Server Settings
+    serverSettings,
+    currentServerId,
+    onUpdateServerSettings,
+    onResetServer,
+    
+    // Export/Import
+    onExport,
+    onImport,
 }) => {
-    const [activeTab, setActiveTab] = useState("badges");
+    const [activeTab, setActiveTab] = useState("profile");
 
     const tabs = useMemo(() => [
-        { id: "badges", label: "Badges", icon: "🏷️" },
+        { id: "profile", label: "Mon Profil", icon: "👤" },
+        { id: "badges", label: "Liste Badges", icon: "🏷️" },
+        { id: "servers", label: "Par Serveur", icon: "🏢" },
         { id: "ui", label: "Personnalisation UI", icon: "🎨" },
         { id: "moderation", label: "Modération", icon: "🛡️" },
         { id: "actions", label: "Actions Rapides", icon: "⚡" },
+        { id: "export", label: "Export/Import", icon: "💾" },
     ], []);
 
     const renderContent = useCallback(() => {
         switch (activeTab) {
-            case "badges":
+            case "profile":
                 return (
-                    <BadgeManager
+                    <ProfilePreview
                         catalog={badgeCatalog}
                         hidden={hiddenBadges}
-                        hideAll={hideAllBadges}
+                        onToggle={onBadgeToggle}
+                        onScan={onScanBadges}
+                    />
+                );
+            case "badges":
+                return (
+                    <BadgeSelection
+                        catalog={badgeCatalog}
+                        hidden={hiddenBadges}
                         onToggle={onBadgeToggle}
                         onToggleAll={onBadgeToggleAll}
                         onScan={onScanBadges}
-                        onReset={onResetBadges}
+                    />
+                );
+            
+            case "servers":
+                return (
+                    <ServerSettings
+                        serverSettings={serverSettings}
+                        currentServerId={currentServerId}
+                        onUpdateServerSettings={onUpdateServerSettings}
+                        onResetServer={onResetServer}
                     />
                 );
             
@@ -124,6 +167,14 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
                     />
                 );
             
+            case "export":
+                return (
+                    <ExportImport
+                        onExport={onExport}
+                        onImport={onImport}
+                    />
+                );
+            
             default:
                 return null;
         }
@@ -150,6 +201,12 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
         enabledQuickActions,
         onQuickActionToggle,
         onQuickActionExecute,
+        serverSettings,
+        currentServerId,
+        onUpdateServerSettings,
+        onResetServer,
+        onExport,
+        onImport,
     ]);
 
     return (
@@ -214,7 +271,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
                 color: DiscordColors.textMuted,
                 textAlign: "center",
             }}>
-                Discord Tools v2.0.0 • Un plugin Vencord par REFLEX60FPSMOBILE
+                Discord Tools v2.1.0 • Un plugin Vencord par REFLEX60FPSMOBILE
             </div>
         </div>
     );

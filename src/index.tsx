@@ -2,19 +2,21 @@
  * Discord Tools - Un plugin Vencord complet
  * 
  * Ce plugin offre :
- * - Masquage avancé des badges avec interface graphique
+ * - Masquage avancé des badges avec sélection visuelle
+ * - Aperçu du profil avec clic sur les badges
  * - Personnalisation de l'UI Discord
  * - Outils de modération automatique
  * - Actions rapides et raccourcis clavier
+ * - Paramètres par serveur
+ * - Export/Import des configurations
  * 
  * Auteur : REFLEX60FPSMOBILE
- * Version : 2.0.0
+ * Version : 2.1.0
  */
 
 import { definePluginSettings } from "@api/Settings";
 import definePlugin, { OptionType } from "@utils/types";
 import { React } from "@webpack/common";
-import { FluxDispatcher } from "@webpack/common";
 
 // Import des types
 import type { 
@@ -24,7 +26,9 @@ import type {
     ModerationRule, 
     ModerationStats,
     QuickAction,
-    PluginSettings 
+    PluginSettings,
+    ServerSettings,
+    ExportData
 } from "@types";
 
 // Import des constantes et utilitaires
@@ -49,6 +53,8 @@ import {
     generateId,
     waitForSelector 
 } from "@utils/helpers";
+
+import { getCurrentServerId, getServerSettings, mergeServerSettings } from "@utils/serverHelpers";
 
 // Import des composants
 import SettingsPanel from "@components/SettingsPanel";
@@ -77,7 +83,7 @@ const settings = definePluginSettings({
             onScanBadges={() => scanAllBadges()}
             onResetBadges={() => resetBadges()}
             
-            // UI
+            // UI Customization
             uiSettings={settings.store.uiSettings ?? getDefaultUISettings()}
             onUISettingsUpdate={(updates) => updateUISettings(updates)}
             
@@ -96,9 +102,32 @@ const settings = definePluginSettings({
             enabledQuickActions={settings.store.enabledQuickActions ?? {}}
             onQuickActionToggle={(id) => toggleQuickAction(id)}
             onQuickActionExecute={(id) => executeQuickAction(id)}
+            
+            // Server Settings
+            serverSettings={settings.store.serverSettings ?? {}}
+            currentServerId={currentServerId}
+            onUpdateServerSettings={(serverId, updates) => updateServerSettings(serverId, updates)}
+            onResetServer={(serverId) => resetServerSettings(serverId)}
+            
+            // Export/Import
+            onExport={() => exportSettings()}
+            onImport={(data) => importSettings(data)}
         />,
     },
-}).withPrivateSettings<PluginSettings>();
+}).withPrivateSettings<PluginSettings & {
+    serverSettings: Record<string, ServerSettings>;
+}>();
+
+// ============================================================================
+// VARIABLES GLOBALES
+// ============================================================================
+
+let currentServerId: string | null = null;
+let observer: MutationObserver | null = null;
+let profileObserver: MutationObserver | null = null;
+let moderationObserver: MutationObserver | null = null;
+let queue: Set<Element> = new Set();
+let scheduled: boolean = false;
 
 // ============================================================================
 // VALEURS PAR DÉFAUT
@@ -151,10 +180,6 @@ function getIconForAction(id: string): string {
 // GESTION DES BADGES
 // ============================================================================
 
-let observer: MutationObserver | null = null;
-let queue: Set<Element> = new Set();
-let scheduled: boolean = false;
-
 function flushBadgeQueue() {
     scheduled = false;
     const imgs = new Set<HTMLImageElement>();
@@ -181,6 +206,7 @@ function processBadgeImages(imgs: Iterable<HTMLImageElement>) {
     const catalog = settings.store.badgeCatalog ?? {};
     const hidden = settings.store.hiddenBadges ?? {};
     const hideAll = settings.store.hideAllBadges ?? false;
+    const serverSettings = settings.store.serverSettings ?? {};
     const found: Record<string, BadgeInfo> = {};
 
     for (const img of imgs) {
@@ -199,8 +225,19 @@ function processBadgeImages(imgs: Iterable<HTMLImageElement>) {
 
         // Masquer l'élément
         const target = resolveBadgeTarget(img);
-        const shouldHide = hideAll || !!hidden[key];
-        setElementHidden(target, shouldHide, CUSTOM_ATTRS.HIDDEN);
+        
+        // Vérifier si on a des paramètres spécifiques au serveur
+        if (currentServerId && serverSettings[currentServerId]) {
+            const serverConfig = serverSettings[currentServerId];
+            const shouldHide = serverConfig.hideBadges || 
+                             serverConfig.hiddenBadges?.[key] || 
+                             hideAll || 
+                             !!hidden[key];
+            setElementHidden(target, shouldHide, CUSTOM_ATTRS.HIDDEN);
+        } else {
+            const shouldHide = hideAll || !!hidden[key];
+            setElementHidden(target, shouldHide, CUSTOM_ATTRS.HIDDEN);
+        }
     }
 
     if (Object.keys(found).length) {
@@ -240,10 +277,21 @@ function resetBadges() {
 function applyAllBadgeSettings() {
     const hideAll = settings.store.hideAllBadges ?? false;
     const hidden = settings.store.hiddenBadges ?? {};
+    const serverSettings = settings.store.serverSettings ?? {};
     
     document.querySelectorAll<HTMLElement>(`[${CUSTOM_ATTRS.HIDDEN}]`).forEach((el) => {
-        const key = el.getAttribute(`data-badge-key`) || "";
-        const shouldHide = hideAll || !!hidden[key];
+        const key = el.getAttribute("data-badge-key") || "";
+        const serverId = el.getAttribute("data-server-id") || "";
+        
+        let shouldHide = hideAll || !!hidden[key];
+        
+        // Vérifier les paramètres du serveur
+        if (serverId && serverSettings[serverId]) {
+            shouldHide = serverSettings[serverId].hideBadges || 
+                       serverSettings[serverId].hiddenBadges?.[key] || 
+                       shouldHide;
+        }
+        
         setElementHidden(el, shouldHide, CUSTOM_ATTRS.HIDDEN);
     });
     
@@ -251,19 +299,38 @@ function applyAllBadgeSettings() {
 }
 
 // ============================================================================
-// PERSONNALISATION UI
+// PARAMÈTRES PAR SERVEUR
 // ============================================================================
 
-function getDefaultUISettings(): UICustomization {
-    return {
-        enabled: false,
-        theme: PRESET_THEMES[0],
-        hideMessageTimestamps: false,
-        hideUserAvatars: false,
-        compactMode: false,
-        customCSS: "",
+function updateServerSettings(serverId: string, updates: Partial<ServerSettings>) {
+    const serverSettings = settings.store.serverSettings ?? {};
+    const current = serverSettings[serverId] || { hideBadges: false, hiddenBadges: {} };
+    settings.store.serverSettings = {
+        ...serverSettings,
+        [serverId]: { ...current, ...updates },
     };
+    applyAllBadgeSettings();
 }
+
+function resetServerSettings(serverId: string) {
+    const serverSettings = settings.store.serverSettings ?? {};
+    const newSettings = { ...serverSettings };
+    delete newSettings[serverId];
+    settings.store.serverSettings = newSettings;
+    applyAllBadgeSettings();
+}
+
+function updateCurrentServer() {
+    const newServerId = getCurrentServerId();
+    if (newServerId !== currentServerId) {
+        currentServerId = newServerId;
+        applyAllBadgeSettings();
+    }
+}
+
+// ============================================================================
+// PERSONNALISATION UI
+// ============================================================================
 
 function updateUISettings(updates: Partial<UICustomization>) {
     const current = settings.store.uiSettings ?? getDefaultUISettings();
@@ -275,15 +342,12 @@ function applyUISettings() {
     const uiSettings = settings.store.uiSettings ?? getDefaultUISettings();
     
     if (!uiSettings.enabled) {
-        // Désactiver toutes les personnalisations
         removeCustomStyles();
         return;
     }
     
-    // Appliquer le thème
     applyTheme(uiSettings.theme);
     
-    // Appliquer les options
     if (uiSettings.hideMessageTimestamps) {
         applyHideTimestamps();
     } else {
@@ -302,7 +366,6 @@ function applyUISettings() {
         removeCompactMode();
     }
     
-    // Appliquer le CSS personnalisé
     if (uiSettings.customCSS) {
         applyCustomCSS(uiSettings.customCSS);
     } else {
@@ -482,15 +545,6 @@ function resetModerationStats() {
     settings.store.moderationStats = getDefaultModerationStats();
 }
 
-function getDefaultModerationStats(): ModerationStats {
-    return {
-        totalMessages: 0,
-        hiddenMessages: 0,
-        warnedUsers: 0,
-        blockedUsers: 0,
-    };
-}
-
 let moderationObserver: MutationObserver | null = null;
 
 function setupModerationObserver() {
@@ -527,7 +581,6 @@ function checkMessageForModeration(element: HTMLElement) {
     
     if (enabledRules.length === 0) return;
     
-    // Vérifier si c'est un message
     if (!element.querySelector?.(".message-content, [class*='messageContent']")) return;
     
     const textContent = element.textContent?.toLowerCase() || "";
@@ -555,13 +608,10 @@ function executeModerationAction(element: HTMLElement, action: string) {
             break;
             
         case MODERATION_ACTIONS.WARN:
-            // Logique pour avertir l'utilisateur
-            // Cela pourrait ouvrir une modale ou envoyer un message
             stats.warnedUsers++;
             break;
             
         case MODERATION_ACTIONS.BLOCK:
-            // Logique pour bloquer l'utilisateur
             stats.blockedUsers++;
             break;
     }
@@ -573,17 +623,6 @@ function executeModerationAction(element: HTMLElement, action: string) {
 // ============================================================================
 // ACTIONS RAPIDES
 // ============================================================================
-
-function getQuickActions(): QuickAction[] {
-    return Object.entries(DEFAULT_QUICK_ACTIONS).map(([id, config]) => ({
-        id,
-        name: config.name,
-        description: config.description,
-        category: config.category,
-        icon: getIconForAction(id),
-        action: () => executeQuickAction(id),
-    }));
-}
 
 function toggleQuickAction(id: string) {
     const enabled = settings.store.enabledQuickActions ?? {};
@@ -644,100 +683,102 @@ function setupKeyboardShortcuts() {
 }
 
 // ============================================================================
-// PLUGIN PRINCIPAL
+// EXPORT/IMPORT
 // ============================================================================
 
-export default definePlugin({
-    name: "Discord Tools",
-    description: "Un outil complet pour personnaliser et améliorer ton expérience Discord. Masque les badges, personnalise l'UI, modère automatiquement les messages, et plus encore.",
-    authors: [
-        { name: "REFLEX60FPSMOBILE", id: 0n },
-    ],
-    version: "2.0.0",
-    settings,
-    
-    // Initialisation
-    start() {
-        // Initialiser les paramètres par défaut si nécessaire
-        if (!settings.store.badgeCatalog) {
-            settings.store.badgeCatalog = {};
-        }
-        if (!settings.store.hiddenBadges) {
-            settings.store.hiddenBadges = {};
-        }
-        if (!settings.store.uiSettings) {
-            settings.store.uiSettings = getDefaultUISettings();
-        }
-        if (!settings.store.moderationRules) {
-            settings.store.moderationRules = [...DEFAULT_MODERATION_RULES];
-        }
-        if (!settings.store.moderationStats) {
-            settings.store.moderationStats = getDefaultModerationStats();
-        }
-        if (!settings.store.enabledQuickActions) {
-            settings.store.enabledQuickActions = {};
+function exportSettings(): ExportData {
+    return {
+        version: "2.1.0",
+        timestamp: Date.now(),
+        settings: {
+            hideAllBadges: settings.store.hideAllBadges ?? false,
+            hiddenBadges: settings.store.hiddenBadges ?? {},
+            badgeCatalog: settings.store.badgeCatalog ?? {},
+            uiSettings: settings.store.uiSettings ?? getDefaultUISettings(),
+            moderationRules: settings.store.moderationRules ?? [...DEFAULT_MODERATION_RULES],
+            moderationStats: settings.store.moderationStats ?? getDefaultModerationStats(),
+            enabledQuickActions: settings.store.enabledQuickActions ?? {},
+        },
+        serverSettings: settings.store.serverSettings ?? {},
+    };
+}
+
+function importSettings(data: ExportData) {
+    // Vérifier la version pour la compatibilité
+    if (data.version) {
+        // Importer les paramètres principaux
+        if (data.settings) {
+            settings.store.hideAllBadges = data.settings.hideAllBadges ?? false;
+            settings.store.hiddenBadges = data.settings.hiddenBadges ?? {};
+            settings.store.badgeCatalog = data.settings.badgeCatalog ?? {};
+            settings.store.uiSettings = data.settings.uiSettings ?? getDefaultUISettings();
+            settings.store.moderationRules = data.settings.moderationRules ?? [...DEFAULT_MODERATION_RULES];
+            settings.store.moderationStats = data.settings.moderationStats ?? getDefaultModerationStats();
+            settings.store.enabledQuickActions = data.settings.enabledQuickActions ?? {};
         }
         
-        // Scanner les badges existants
-        scanAllBadges();
+        // Importer les paramètres par serveur
+        if (data.serverSettings) {
+            settings.store.serverSettings = data.serverSettings;
+        }
         
-        // Appliquer les paramètres UI
+        // Appliquer les changements
+        applyAllBadgeSettings();
         applyUISettings();
-        
-        // Configurer les observateurs
-        setupBadgeObserver();
-        
-        // Configurer les raccourcis clavier
-        setupKeyboardShortcuts();
-        
-        // Configurer l'observateur de modération si activé
-        if (settings.store.moderationEnabled) {
-            setupModerationObserver();
-        }
-    },
+    }
+}
+
+// ============================================================================
+// OBSERVATEUR DES PROFILS
+// ============================================================================
+
+function setupProfileObserver() {
+    if (profileObserver) return;
     
-    // Arrêt du plugin
-    stop() {
-        // Déconnecter les observateurs
-        if (observer) {
-            observer.disconnect();
-            observer = null;
-        }
-        
-        if (moderationObserver) {
-            moderationObserver.disconnect();
-            moderationObserver = null;
-        }
-        
-        // Réinitialiser les styles
-        removeCustomStyles();
-        
-        // Réafficher tous les éléments masqués
-        document.querySelectorAll<HTMLElement>(`[${CUSTOM_ATTRS.HIDDEN}]`).forEach((el) => {
-            setElementHidden(el, false, CUSTOM_ATTRS.HIDDEN);
-        });
-        
-        document.querySelectorAll<HTMLElement>(`[${CUSTOM_ATTRS.MODERATED}]`).forEach((el) => {
-            setElementHidden(el, false, CUSTOM_ATTRS.MODERATED);
-        });
-        
-        // Retirer les styles injectés
-        const styles = [
-            "vc-discord-tools-theme",
-            "vc-hide-timestamps",
-            "vc-hide-avatars",
-            "vc-compact-mode",
-            "vc-custom-css",
-        ];
-        
-        for (const id of styles) {
-            const style = document.getElementById(id);
-            if (style) {
-                style.remove();
+    profileObserver = new MutationObserver(debounce((mutations) => {
+        for (const mutation of mutations) {
+            for (const node of mutation.addedNodes) {
+                if (node.nodeType === Node.ELEMENT_NODE) {
+                    const element = node as HTMLElement;
+                    if (element.querySelector?.(".userProfileModal, [class*='userProfile'], [class*='profileModal']")) {
+                        scanProfileForBadges(element);
+                    }
+                    if (element.querySelector?.(".userPopout, [class*='userPopout'], [class*='profilePopout']")) {
+                        scanProfileForBadges(element);
+                    }
+                }
             }
         }
-    },
-});
+    }, 300));
+    
+    profileObserver.observe(document.body, {
+        childList: true,
+        subtree: true,
+    });
+}
+
+function scanProfileForBadges(element: HTMLElement) {
+    const profileBadges = element.querySelectorAll<HTMLImageElement>(BADGE_SELECTORS.IMG);
+    if (profileBadges.length > 0) {
+        processBadgeImages(profileBadges);
+    }
+    
+    const profileObserver = new MutationObserver(debounce(() => {
+        const badges = element.querySelectorAll<HTMLImageElement>(BADGE_SELECTORS.IMG);
+        if (badges.length > 0) {
+            processBadgeImages(badges);
+        }
+    }, 200));
+    
+    profileObserver.observe(element, {
+        childList: true,
+        subtree: true,
+    });
+    
+    setTimeout(() => {
+        profileObserver.disconnect();
+    }, 10000);
+}
 
 // ============================================================================
 // OBSERVATEUR DES BADGES
@@ -767,3 +808,131 @@ function setupBadgeObserver() {
         attributeFilter: ["src", "class"],
     });
 }
+
+// ============================================================================
+// OBSERVATEUR DE CHANGEMENT DE SERVEUR
+// ============================================================================
+
+function setupServerObserver() {
+    const serverObserver = new MutationObserver(debounce(() => {
+        updateCurrentServer();
+    }, 100));
+    
+    serverObserver.observe(document.body, {
+        childList: true,
+        subtree: true,
+    });
+    
+    return serverObserver;
+}
+
+// ============================================================================
+// PLUGIN PRINCIPAL
+// ============================================================================
+
+export default definePlugin({
+    name: "Discord Tools",
+    description: "Un outil complet pour personnaliser et améliorer ton expérience Discord. Masque les badges avec sélection visuelle, personnalise l'UI, modère automatiquement les messages, et plus encore.",
+    authors: [
+        { name: "REFLEX60FPSMOBILE", id: 0n },
+    ],
+    version: "2.1.0",
+    settings,
+    
+    // Initialisation
+    start() {
+        // Initialiser les paramètres par défaut si nécessaire
+        if (!settings.store.badgeCatalog) {
+            settings.store.badgeCatalog = {};
+        }
+        if (!settings.store.hiddenBadges) {
+            settings.store.hiddenBadges = {};
+        }
+        if (!settings.store.uiSettings) {
+            settings.store.uiSettings = getDefaultUISettings();
+        }
+        if (!settings.store.moderationRules) {
+            settings.store.moderationRules = [...DEFAULT_MODERATION_RULES];
+        }
+        if (!settings.store.moderationStats) {
+            settings.store.moderationStats = getDefaultModerationStats();
+        }
+        if (!settings.store.enabledQuickActions) {
+            settings.store.enabledQuickActions = {};
+        }
+        if (!settings.store.serverSettings) {
+            settings.store.serverSettings = {};
+        }
+        
+        // Récupérer le serveur actuel
+        currentServerId = getCurrentServerId();
+        
+        // Scanner les badges existants
+        scanAllBadges();
+        
+        // Appliquer les paramètres UI
+        applyUISettings();
+        
+        // Configurer les observateurs
+        setupBadgeObserver();
+        setupProfileObserver();
+        setupServerObserver();
+        
+        // Configurer les raccourcis clavier
+        setupKeyboardShortcuts();
+        
+        // Configurer l'observateur de modération si activé
+        if (settings.store.moderationEnabled) {
+            setupModerationObserver();
+        }
+    },
+    
+    // Arrêt du plugin
+    stop() {
+        // Déconnecter les observateurs
+        if (observer) {
+            observer.disconnect();
+            observer = null;
+        }
+        
+        if (profileObserver) {
+            profileObserver.disconnect();
+            profileObserver = null;
+        }
+        
+        if (moderationObserver) {
+            moderationObserver.disconnect();
+            moderationObserver = null;
+        }
+        
+        // Réinitialiser
+        currentServerId = null;
+        queue = new Set();
+        scheduled = false;
+        
+        // Réafficher tous les éléments masqués
+        document.querySelectorAll<HTMLElement>(`[${CUSTOM_ATTRS.HIDDEN}]`).forEach((el) => {
+            setElementHidden(el, false, CUSTOM_ATTRS.HIDDEN);
+        });
+        
+        document.querySelectorAll<HTMLElement>(`[${CUSTOM_ATTRS.MODERATED}]`).forEach((el) => {
+            setElementHidden(el, false, CUSTOM_ATTRS.MODERATED);
+        });
+        
+        // Retirer les styles injectés
+        const styles = [
+            "vc-discord-tools-theme",
+            "vc-hide-timestamps",
+            "vc-hide-avatars",
+            "vc-compact-mode",
+            "vc-custom-css",
+        ];
+        
+        for (const id of styles) {
+            const style = document.getElementById(id);
+            if (style) {
+                style.remove();
+            }
+        }
+    },
+});
