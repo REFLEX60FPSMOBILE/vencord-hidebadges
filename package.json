@@ -1,0 +1,51 @@
+{
+  "name": "vencord-discord-tools",
+  "version": "2.0.0",
+  "description": "Un outil complet pour Discord via Vencord - Masquage de badges, personnalisation UI, et outils de modération",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "vencord build",
+    "inject": "vencord inject",
+    "dev": "vencord build --watch",
+    "lint": "eslint src --ext .ts,.tsx",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "vencord",
+    "discord",
+    "plugin",
+    "badges",
+    "customization",
+    "moderation",
+    "ui-tools"
+  ],
+  "author": "REFLEX60FPSMOBILE",
+  "license": "GPL-3.0-or-later",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/REFLEX60FPSMOBILE/vencord-hidebadges"
+  },
+  "bugs": {
+    "url": "https://github.com/REFLEX60FPSMOBILE/vencord-hidebadges/issues"
+  },
+  "homepage": "https://github.com/REFLEX60FPSMOBILE/vencord-hidebadges#readme",
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "typescript": "^5.0.0",
+    "eslint": "^8.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0"
+  },
+  "vencord": {
+    "id": "discordTools",
+    "name": "Discord Tools",
+    "description": "Outil complet pour personnaliser et améliorer ton expérience Discord",
+    "version": "2.0.0",
+    "author": "REFLEX60FPSMOBILE"
+  }
+}
