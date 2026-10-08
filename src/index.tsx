@@ -1,24 +1,25 @@
 /*
- * Discord Tools - Un plugin Vencord complet
+ * Shoyz Tools - A comprehensive Discord tool suite for Vencord
  * 
- * Ce plugin offre :
- * - Masquage avancé des badges avec sélection visuelle
- * - Aperçu du profil avec clic sur les badges
- * - Personnalisation de l'UI Discord
- * - Outils de modération automatique
- * - Actions rapides et raccourcis clavier
- * - Paramètres par serveur
- * - Export/Import des configurations
+ * This plugin provides:
+ * - Advanced badge hiding with visual selection
+ * - Profile preview with clickable badges
+ * - Discord UI customization
+ * - Automatic moderation tools
+ * - Quick actions and keyboard shortcuts
+ * - Per-server settings
+ * - Export/Import configurations
+ * - OSINT capabilities for public data analysis
  * 
- * Auteur : REFLEX60FPSMOBILE
- * Version : 2.1.0
+ * Author: REFLEX60FPSMOBILE
+ * Version: 1.0.0
  */
 
 import { definePluginSettings } from "@api/Settings";
 import definePlugin, { OptionType } from "@utils/types";
 import { React } from "@webpack/common";
 
-// Import des types
+// Import types
 import type { 
     BadgeInfo, 
     UITheme, 
@@ -31,7 +32,7 @@ import type {
     ExportData
 } from "@types";
 
-// Import des constantes et utilitaires
+// Import constants and utilities
 import { 
     BADGE_SELECTORS, 
     CUSTOM_ATTRS,
@@ -56,18 +57,18 @@ import {
 
 import { getCurrentServerId, getServerSettings, mergeServerSettings } from "@utils/serverHelpers";
 
-// Import des composants
+// Import components
 import SettingsPanel from "@components/SettingsPanel";
 
 // ============================================================================
-// DÉFINITION DES PARAMÈTRES
+// SETTINGS DEFINITION
 // ============================================================================
 
 const settings = definePluginSettings({
     // Badges
     hideAllBadges: {
         type: OptionType.BOOLEAN,
-        description: "Masquer TOUS les badges (ignore la liste ci-dessous)",
+        description: "Hide ALL badges (ignores the list below)",
         default: false,
         onChange: () => applyAllBadgeSettings(),
     },
@@ -119,7 +120,7 @@ const settings = definePluginSettings({
 }>();
 
 // ============================================================================
-// VARIABLES GLOBALES
+// GLOBAL VARIABLES
 // ============================================================================
 
 let currentServerId: string | null = null;
@@ -130,7 +131,7 @@ let queue: Set<Element> = new Set();
 let scheduled: boolean = false;
 
 // ============================================================================
-// VALEURS PAR DÉFAUT
+// DEFAULT VALUES
 // ============================================================================
 
 function getDefaultUISettings(): UICustomization {
@@ -166,10 +167,10 @@ function getQuickActions(): QuickAction[] {
 
 function getIconForAction(id: string): string {
     const icons: Record<string, string> = {
-        toggleBadges: "🏷️",
+        toggleBadges: "🏳️",
         toggleAvatars: "👤",
         toggleTimestamps: "⏰",
-        compactMode: "📐",
+        compactMode: "📄",
         clearCache: "🗑️",
         scanBadges: "🔍",
     };
@@ -177,7 +178,7 @@ function getIconForAction(id: string): string {
 }
 
 // ============================================================================
-// GESTION DES BADGES
+// BADGE MANAGEMENT
 // ============================================================================
 
 function flushBadgeQueue() {
@@ -223,10 +224,10 @@ function processBadgeImages(imgs: Iterable<HTMLImageElement>) {
             };
         }
 
-        // Masquer l'élément
+        // Hide the element
         const target = resolveBadgeTarget(img);
         
-        // Vérifier si on a des paramètres spécifiques au serveur
+        // Check for server-specific settings
         if (currentServerId && serverSettings[currentServerId]) {
             const serverConfig = serverSettings[currentServerId];
             const shouldHide = serverConfig.hideBadges || 
@@ -285,7 +286,7 @@ function applyAllBadgeSettings() {
         
         let shouldHide = hideAll || !!hidden[key];
         
-        // Vérifier les paramètres du serveur
+        // Check server settings
         if (serverId && serverSettings[serverId]) {
             shouldHide = serverSettings[serverId].hideBadges || 
                        serverSettings[serverId].hiddenBadges?.[key] || 
@@ -299,7 +300,7 @@ function applyAllBadgeSettings() {
 }
 
 // ============================================================================
-// PARAMÈTRES PAR SERVEUR
+// SERVER SETTINGS
 // ============================================================================
 
 function updateServerSettings(serverId: string, updates: Partial<ServerSettings>) {
@@ -329,7 +330,7 @@ function updateCurrentServer() {
 }
 
 // ============================================================================
-// PERSONNALISATION UI
+// UI CUSTOMIZATION
 // ============================================================================
 
 function updateUISettings(updates: Partial<UICustomization>) {
@@ -374,10 +375,10 @@ function applyUISettings() {
 }
 
 function applyTheme(theme: UITheme) {
-    const style = document.getElementById("vc-discord-tools-theme");
+    const style = document.getElementById("vc-shoyz-tools-theme");
     if (!style) {
         const newStyle = document.createElement("style");
-        newStyle.id = "vc-discord-tools-theme";
+        newStyle.id = "vc-shoyz-tools-theme";
         document.head.appendChild(newStyle);
     }
     
@@ -507,7 +508,7 @@ function removeCustomStyles() {
 }
 
 // ============================================================================
-// OUTILS DE MODÉRATION
+// MODERATION TOOLS
 // ============================================================================
 
 function toggleModeration() {
@@ -621,7 +622,7 @@ function executeModerationAction(element: HTMLElement, action: string) {
 }
 
 // ============================================================================
-// ACTIONS RAPIDES
+// QUICK ACTIONS
 // ============================================================================
 
 function toggleQuickAction(id: string) {
@@ -662,7 +663,7 @@ function executeQuickAction(id: string) {
 }
 
 // ============================================================================
-// RACCURCIS CLAVIER
+// KEYBOARD SHORTCUTS
 // ============================================================================
 
 function setupKeyboardShortcuts() {
@@ -688,7 +689,7 @@ function setupKeyboardShortcuts() {
 
 function exportSettings(): ExportData {
     return {
-        version: "2.1.0",
+        version: "1.0.0",
         timestamp: Date.now(),
         settings: {
             hideAllBadges: settings.store.hideAllBadges ?? false,
@@ -704,9 +705,9 @@ function exportSettings(): ExportData {
 }
 
 function importSettings(data: ExportData) {
-    // Vérifier la version pour la compatibilité
+    // Check version for compatibility
     if (data.version) {
-        // Importer les paramètres principaux
+        // Import main settings
         if (data.settings) {
             settings.store.hideAllBadges = data.settings.hideAllBadges ?? false;
             settings.store.hiddenBadges = data.settings.hiddenBadges ?? {};
@@ -717,19 +718,19 @@ function importSettings(data: ExportData) {
             settings.store.enabledQuickActions = data.settings.enabledQuickActions ?? {};
         }
         
-        // Importer les paramètres par serveur
+        // Import server settings
         if (data.serverSettings) {
             settings.store.serverSettings = data.serverSettings;
         }
         
-        // Appliquer les changements
+        // Apply changes
         applyAllBadgeSettings();
         applyUISettings();
     }
 }
 
 // ============================================================================
-// OBSERVATEUR DES PROFILS
+// PROFILE OBSERVER
 // ============================================================================
 
 function setupProfileObserver() {
@@ -781,7 +782,7 @@ function scanProfileForBadges(element: HTMLElement) {
 }
 
 // ============================================================================
-// OBSERVATEUR DES BADGES
+// BADGE OBSERVER
 // ============================================================================
 
 function setupBadgeObserver() {
@@ -810,7 +811,7 @@ function setupBadgeObserver() {
 }
 
 // ============================================================================
-// OBSERVATEUR DE CHANGEMENT DE SERVEUR
+// SERVER OBSERVER
 // ============================================================================
 
 function setupServerObserver() {
@@ -827,21 +828,21 @@ function setupServerObserver() {
 }
 
 // ============================================================================
-// PLUGIN PRINCIPAL
+// MAIN PLUGIN
 // ============================================================================
 
 export default definePlugin({
-    name: "Discord Tools",
-    description: "Un outil complet pour personnaliser et améliorer ton expérience Discord. Masque les badges avec sélection visuelle, personnalise l'UI, modère automatiquement les messages, et plus encore.",
+    name: "Shoyz Tools",
+    description: "A comprehensive Discord tool suite with OSINT capabilities, badge management, UI customization, and server analysis",
     authors: [
         { name: "REFLEX60FPSMOBILE", id: 0n },
     ],
-    version: "2.1.0",
+    version: "1.0.0",
     settings,
     
-    // Initialisation
+    // Initialization
     start() {
-        // Initialiser les paramètres par défaut si nécessaire
+        // Initialize default settings if needed
         if (!settings.store.badgeCatalog) {
             settings.store.badgeCatalog = {};
         }
@@ -864,32 +865,32 @@ export default definePlugin({
             settings.store.serverSettings = {};
         }
         
-        // Récupérer le serveur actuel
+        // Get current server
         currentServerId = getCurrentServerId();
         
-        // Scanner les badges existants
+        // Scan existing badges
         scanAllBadges();
         
-        // Appliquer les paramètres UI
+        // Apply UI settings
         applyUISettings();
         
-        // Configurer les observateurs
+        // Setup observers
         setupBadgeObserver();
         setupProfileObserver();
         setupServerObserver();
         
-        // Configurer les raccourcis clavier
+        // Setup keyboard shortcuts
         setupKeyboardShortcuts();
         
-        // Configurer l'observateur de modération si activé
+        // Setup moderation observer if enabled
         if (settings.store.moderationEnabled) {
             setupModerationObserver();
         }
     },
     
-    // Arrêt du plugin
+    // Plugin stop
     stop() {
-        // Déconnecter les observateurs
+        // Disconnect observers
         if (observer) {
             observer.disconnect();
             observer = null;
@@ -905,12 +906,12 @@ export default definePlugin({
             moderationObserver = null;
         }
         
-        // Réinitialiser
+        // Reset
         currentServerId = null;
         queue = new Set();
         scheduled = false;
         
-        // Réafficher tous les éléments masqués
+        // Show all hidden elements
         document.querySelectorAll<HTMLElement>(`[${CUSTOM_ATTRS.HIDDEN}]`).forEach((el) => {
             setElementHidden(el, false, CUSTOM_ATTRS.HIDDEN);
         });
@@ -919,9 +920,9 @@ export default definePlugin({
             setElementHidden(el, false, CUSTOM_ATTRS.MODERATED);
         });
         
-        // Retirer les styles injectés
+        // Remove injected styles
         const styles = [
-            "vc-discord-tools-theme",
+            "vc-shoyz-tools-theme",
             "vc-hide-timestamps",
             "vc-hide-avatars",
             "vc-compact-mode",

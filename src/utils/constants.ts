@@ -1,6 +1,6 @@
-// Constantes pour le plugin
+// Constants for Shoyz Tools plugin
 
-// Sélecteurs CSS pour les badges
+// CSS selectors for badges
 export const BADGE_SELECTORS = {
     IMG: [
         'img[src*="/badge-icons/"]',
@@ -19,175 +19,209 @@ export const BADGE_SELECTORS = {
     ].join(","),
 };
 
-// Attributs personnalisés
+// Custom attributes
 export const CUSTOM_ATTRS = {
-    HIDDEN: "data-vc-discord-tools-hidden",
+    HIDDEN: "data-vc-shoyz-tools-hidden",
     CUSTOM_THEME: "data-vc-custom-theme",
     MODERATED: "data-vc-moderated",
 };
 
-// Catégories de badges
+// Badge categories
 export const BADGE_CATEGORIES = {
     DISCORD: "discord",
     VENCORD: "vencord",
     CUSTOM: "custom",
-    OTHER: "autre",
+    OTHER: "other",
 };
 
-// Actions de modération
+// Moderation actions
 export const MODERATION_ACTIONS = {
     HIDE: "hide",
     WARN: "warn",
     BLOCK: "block",
 } as const;
 
-// Thèmes prédéfinis
+// Preset themes
 export const PRESET_THEMES = [
     {
         id: "default",
-        name: "Par défaut",
+        name: "Default",
         colors: {
             primary: "#5865f2",
             secondary: "#4752c4",
-            accent: "#8994fa",
-            background: "var(--background-primary)",
-            text: "var(--text-normal)",
-            muted: "var(--text-muted)",
+            accent: "#7289da",
+            background: "#36393f",
+            text: "#ffffff",
+            muted: "#99aab5",
         },
     },
     {
         id: "dark",
-        name: "Sombre",
+        name: "Dark",
         colors: {
-            primary: "#3a3f4a",
-            secondary: "#2a2e3a",
+            primary: "#2f3136",
+            secondary: "#202225",
             accent: "#5865f2",
-            background: "#0e0e0e",
+            background: "#1e1e1e",
             text: "#ffffff",
-            muted: "#808080",
+            muted: "#72767d",
         },
     },
     {
         id: "light",
-        name: "Clair",
+        name: "Light",
         colors: {
             primary: "#7289da",
             secondary: "#99aab5",
             accent: "#5865f2",
             background: "#ffffff",
             text: "#000000",
-            muted: "#666666",
+            muted: "#4f545c",
         },
     },
     {
         id: "green",
-        name: "Vert",
+        name: "Green",
         colors: {
             primary: "#3ba55c",
             secondary: "#2e8b57",
-            accent: "#90ee90",
-            background: "var(--background-primary)",
-            text: "var(--text-normal)",
-            muted: "var(--text-muted)",
+            accent: "#43b581",
+            background: "#36393f",
+            text: "#ffffff",
+            muted: "#99aab5",
         },
     },
     {
         id: "red",
-        name: "Rouge",
+        name: "Red",
         colors: {
             primary: "#ed4245",
             secondary: "#c73a3d",
-            accent: "#ff6b6b",
-            background: "var(--background-primary)",
-            text: "var(--text-normal)",
-            muted: "var(--text-muted)",
+            accent: "#ff0000",
+            background: "#36393f",
+            text: "#ffffff",
+            muted: "#99aab5",
+        },
+    },
+    {
+        id: "purple",
+        name: "Purple",
+        colors: {
+            primary: "#9b59b6",
+            secondary: "#8e44ad",
+            accent: "#a569bd",
+            background: "#36393f",
+            text: "#ffffff",
+            muted: "#99aab5",
         },
     },
 ];
 
-// Actions rapides par défaut
+// Default quick actions
 export const DEFAULT_QUICK_ACTIONS = {
     toggleBadges: {
-        name: "Basculer les badges",
-        description: "Affiche/masque tous les badges",
+        id: "toggleBadges",
+        name: "Toggle Badges",
+        description: "Show or hide all badges globally",
         category: "Badges",
     },
     toggleAvatars: {
-        name: "Basculer les avatars",
-        description: "Affiche/masque les avatars des utilisateurs",
+        id: "toggleAvatars",
+        name: "Toggle Avatars",
+        description: "Show or hide user avatars",
         category: "UI",
     },
     toggleTimestamps: {
-        name: "Basculer les timestamps",
-        description: "Affiche/masque les horodatages des messages",
+        id: "toggleTimestamps",
+        name: "Toggle Timestamps",
+        description: "Show or hide message timestamps",
         category: "UI",
     },
     compactMode: {
-        name: "Mode compact",
-        description: "Active/désactive le mode compact",
+        id: "compactMode",
+        name: "Compact Mode",
+        description: "Enable or disable compact message spacing",
         category: "UI",
     },
     clearCache: {
-        name: "Effacer le cache",
-        description: "Efface le cache des badges et des images",
-        category: "Maintenance",
+        id: "clearCache",
+        name: "Clear Cache",
+        description: "Clear badge catalog and cached data",
+        category: "System",
     },
     scanBadges: {
-        name: "Scanner les badges",
-        description: "Recherche de nouveaux badges dans le DOM",
+        id: "scanBadges",
+        name: "Scan Badges",
+        description: "Scan for new badges on the page",
         category: "Badges",
     },
 };
 
-// Règles de modération par défaut
+// Default moderation rules
 export const DEFAULT_MODERATION_RULES = [
     {
-        id: "spam-links",
-        name: "Liens de spam",
-        pattern: "(http|https)://(bit\\.ly|tinyurl|goo\\.gl|t\\.co)",
+        id: "hide-short-links",
+        name: "Hide Shortened Links",
+        pattern: "(https?:\/\/)?(bit\.ly|tinyurl\.com|goo\.gl|ow\.ly|is\.gd)",
         action: "hide",
-        enabled: false,
+        enabled: true,
     },
     {
-        id: "discord-invite",
-        name: "Invitations Discord",
-        pattern: "(discord\\.gg|discord\\.com/invite)",
+        id: "warn-discord-invites",
+        name: "Warn for Discord Invites",
+        pattern: "(discord\.gg|discord\.com\/invite)",
         action: "warn",
         enabled: false,
     },
     {
-        id: "bad-words",
-        name: "Mots inappropriés",
-        pattern: "(fuck|shit|bitch|asshole)",
+        id: "hide-profanity",
+        name: "Hide Profanity",
+        pattern: "(fuck|shit|bitch|asshole|cunt|dick|pussy|bastard)",
+        action: "hide",
+        enabled: false,
+    },
+    {
+        id: "hide-spam",
+        name: "Hide Spam Messages",
+        pattern: "(BUY|FREE|WIN|PRIZE|CLICK|LIMITED|URGENT|ACT NOW)",
         action: "hide",
         enabled: false,
     },
 ];
 
-// Raccourcis clavier par défaut
+// Default keyboard shortcuts
 export const DEFAULT_SHORTCUTS = [
     {
-        id: "toggle-badges",
-        name: "Basculer les badges",
-        key: "B",
+        id: "toggleBadges",
+        name: "Toggle Badges",
+        key: "b",
         ctrl: true,
         shift: false,
         alt: false,
     },
     {
-        id: "toggle-ui",
-        name: "Basculer l'UI personnalisée",
-        key: "U",
+        id: "toggleAvatars",
+        name: "Toggle Avatars",
+        key: "u",
         ctrl: true,
         shift: false,
         alt: false,
     },
     {
-        id: "scan-badges",
-        name: "Scanner les badges",
-        key: "S",
+        id: "scanBadges",
+        name: "Scan Badges",
+        key: "s",
         ctrl: true,
         shift: true,
         alt: false,
     },
 ];
+
+// Performance settings
+export const PERFORMANCE = {
+    DEBOUNCE_DELAY: 300,
+    THROTTLE_DELAY: 500,
+    BATCH_SIZE: 50,
+    MAX_QUEUE_SIZE: 100,
+    SCAN_INTERVAL: 5000,
+};

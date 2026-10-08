@@ -1,7 +1,7 @@
 {
-  "name": "vencord-discord-tools",
-  "version": "2.0.0",
-  "description": "Un outil complet pour Discord via Vencord - Masquage de badges, personnalisation UI, et outils de modération",
+  "name": "shoyz-tools",
+  "version": "1.0.0",
+  "description": "Shoyz Tools - A comprehensive Discord tool suite for Vencord with OSINT capabilities, badge management, UI customization, and server analysis",
   "main": "dist/index.js",
   "scripts": {
     "build": "vencord build",
@@ -14,21 +14,24 @@
     "vencord",
     "discord",
     "plugin",
+    "osint",
+    "security",
     "badges",
     "customization",
     "moderation",
-    "ui-tools"
+    "ui-tools",
+    "threat-intelligence"
   ],
   "author": "REFLEX60FPSMOBILE",
   "license": "GPL-3.0-or-later",
   "repository": {
     "type": "git",
-    "url": "https://github.com/REFLEX60FPSMOBILE/vencord-hidebadges"
+    "url": "https://github.com/REFLEX60FPSMOBILE/shoyz-tools"
   },
   "bugs": {
-    "url": "https://github.com/REFLEX60FPSMOBILE/vencord-hidebadges/issues"
+    "url": "https://github.com/REFLEX60FPSMOBILE/shoyz-tools/issues"
   },
-  "homepage": "https://github.com/REFLEX60FPSMOBILE/vencord-hidebadges#readme",
+  "homepage": "https://github.com/REFLEX60FPSMOBILE/shoyz-tools#readme",
   "dependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
@@ -42,10 +45,10 @@
     "@typescript-eslint/parser": "^6.0.0"
   },
   "vencord": {
-    "id": "discordTools",
-    "name": "Discord Tools",
-    "description": "Outil complet pour personnaliser et améliorer ton expérience Discord",
-    "version": "2.0.0",
+    "id": "shoyzTools",
+    "name": "Shoyz Tools",
+    "description": "Comprehensive Discord tool suite with OSINT capabilities, badge management, UI customization, and server analysis",
+    "version": "1.0.0",
     "author": "REFLEX60FPSMOBILE"
   }
 }

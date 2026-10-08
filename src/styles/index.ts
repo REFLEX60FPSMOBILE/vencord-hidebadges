@@ -1,6 +1,6 @@
 import { CSSProperties } from "react";
 
-// Couleurs Discord
+// Discord Colors
 export const DiscordColors = {
     primary: "#5865f2",
     primaryHover: "#4752c4",
@@ -13,6 +13,7 @@ export const DiscordColors = {
     warning: "#faa61a",
     warningHover: "#e09500",
     info: "#7289da",
+    link: "#00aff4",
     backgroundPrimary: "var(--background-primary, #36393f)",
     backgroundSecondary: "var(--background-secondary, #2f3136)",
     backgroundTertiary: "var(--background-tertiary, #202225)",
@@ -24,7 +25,7 @@ export const DiscordColors = {
     border: "var(--border, rgba(255, 255, 255, 0.05))",
 };
 
-// Styles de base pour les composants
+// Base styles for components
 export const BaseStyles = {
     container: {
         display: "flex",
@@ -65,7 +66,7 @@ export const BaseStyles = {
     } as CSSProperties,
 };
 
-// Styles pour les boutons
+// Button styles
 export const ButtonStyles = {
     primary: {
         padding: "8px 16px",
@@ -77,12 +78,6 @@ export const ButtonStyles = {
         fontSize: "14px",
         fontWeight: 500,
         transition: "background-color 0.2s",
-        ":hover": {
-            backgroundColor: DiscordColors.primaryHover,
-        },
-        ":active": {
-            backgroundColor: DiscordColors.primaryActive,
-        },
     } as CSSProperties,
     
     secondary: {
@@ -95,10 +90,6 @@ export const ButtonStyles = {
         fontSize: "14px",
         fontWeight: 500,
         transition: "all 0.2s",
-        ":hover": {
-            backgroundColor: DiscordColors.backgroundModifierHover,
-            borderColor: DiscordColors.primary,
-        },
     } as CSSProperties,
     
     danger: {
@@ -111,9 +102,18 @@ export const ButtonStyles = {
         fontSize: "14px",
         fontWeight: 500,
         transition: "background-color 0.2s",
-        ":hover": {
-            backgroundColor: DiscordColors.dangerHover,
-        },
+    } as CSSProperties,
+    
+    success: {
+        padding: "8px 16px",
+        borderRadius: "4px",
+        border: "none",
+        cursor: "pointer",
+        backgroundColor: DiscordColors.success,
+        color: "#fff",
+        fontSize: "14px",
+        fontWeight: 500,
+        transition: "background-color 0.2s",
     } as CSSProperties,
     
     ghost: {
@@ -126,9 +126,6 @@ export const ButtonStyles = {
         fontSize: "14px",
         fontWeight: 500,
         transition: "background-color 0.2s",
-        ":hover": {
-            backgroundColor: DiscordColors.backgroundModifierHover,
-        },
     } as CSSProperties,
     
     icon: {
@@ -139,14 +136,10 @@ export const ButtonStyles = {
         backgroundColor: DiscordColors.backgroundTertiary,
         color: DiscordColors.textNormal,
         transition: "all 0.2s",
-        ":hover": {
-            backgroundColor: DiscordColors.backgroundModifierHover,
-            color: DiscordColors.textNormal,
-        },
     } as CSSProperties,
 };
 
-// Styles pour les inputs
+// Input styles
 export const InputStyles = {
     text: {
         flex: 1,
@@ -158,9 +151,6 @@ export const InputStyles = {
         fontSize: "14px",
         outline: "none",
         transition: "border-color 0.2s",
-        ":focus": {
-            borderColor: DiscordColors.primary,
-        },
     } as CSSProperties,
     
     checkbox: {
@@ -180,9 +170,23 @@ export const InputStyles = {
         outline: "none",
         cursor: "pointer",
     } as CSSProperties,
+    
+    textarea: {
+        width: "100%",
+        padding: "12px",
+        borderRadius: "4px",
+        border: `1px solid ${DiscordColors.border}`,
+        backgroundColor: DiscordColors.backgroundTertiary,
+        color: DiscordColors.textNormal,
+        fontSize: "14px",
+        outline: "none",
+        resize: "vertical",
+        minHeight: "100px",
+        fontFamily: "inherit",
+    } as CSSProperties,
 };
 
-// Styles pour les cartes
+// Card styles
 export const CardStyles = {
     container: {
         display: "flex",
@@ -192,11 +196,6 @@ export const CardStyles = {
         backgroundColor: DiscordColors.backgroundTertiary,
         borderRadius: "6px",
         border: `1px solid ${DiscordColors.border}`,
-        transition: "all 0.2s",
-        ":hover": {
-            backgroundColor: DiscordColors.backgroundModifierHover,
-            borderColor: DiscordColors.primary,
-        },
     } as CSSProperties,
     
     header: {
@@ -227,6 +226,13 @@ export const CardStyles = {
         textOverflow: "ellipsis",
     } as CSSProperties,
     
+    cardTitle: {
+        color: DiscordColors.textNormal,
+        fontSize: "14px",
+        fontWeight: 600,
+        margin: "0 0 8px 0",
+    } as CSSProperties,
+    
     description: {
         color: DiscordColors.textMuted,
         fontSize: "12px",
@@ -240,7 +246,7 @@ export const CardStyles = {
     } as CSSProperties,
 };
 
-// Styles pour les listes
+// List styles
 export const ListStyles = {
     container: {
         display: "flex",
@@ -256,6 +262,12 @@ export const ListStyles = {
         overflowY: "auto",
     } as CSSProperties,
     
+    items: {
+        display: "flex",
+        flexDirection: "column",
+        gap: "8px",
+    } as CSSProperties,
+    
     item: {
         display: "flex",
         alignItems: "center",
@@ -266,9 +278,6 @@ export const ListStyles = {
         cursor: "pointer",
         userSelect: "none",
         transition: "all 0.2s",
-        ":hover": {
-            backgroundColor: DiscordColors.backgroundModifierHover,
-        },
     } as CSSProperties,
     
     itemSelected: {
@@ -282,7 +291,7 @@ export const ListStyles = {
     } as CSSProperties,
 };
 
-// Styles pour les badges
+// Badge styles
 export const BadgeStyles = {
     container: {
         display: "inline-flex",
@@ -308,7 +317,7 @@ export const BadgeStyles = {
     } as CSSProperties,
 };
 
-// Styles pour les notifications
+// Notification styles
 export const NotificationStyles = {
     container: {
         display: "flex",
@@ -317,7 +326,6 @@ export const NotificationStyles = {
         padding: "12px 16px",
         borderRadius: "8px",
         marginBottom: "8px",
-        animation: "slideIn 0.3s ease",
     } as CSSProperties,
     
     info: {
@@ -372,13 +380,14 @@ export const NotificationStyles = {
     } as CSSProperties,
 };
 
-// Styles pour les onglets
+// Tab styles
 export const TabStyles = {
     container: {
         display: "flex",
         gap: "4px",
         borderBottom: `1px solid ${DiscordColors.border}`,
         marginBottom: "12px",
+        flexWrap: "wrap",
     } as CSSProperties,
     
     tab: {
@@ -391,10 +400,7 @@ export const TabStyles = {
         cursor: "pointer",
         borderBottom: `2px solid transparent`,
         transition: "all 0.2s",
-        ":hover": {
-            color: DiscordColors.textNormal,
-            backgroundColor: DiscordColors.backgroundModifierHover,
-        },
+        marginBottom: "-1px",
     } as CSSProperties,
     
     tabActive: {
@@ -412,7 +418,7 @@ export const TabStyles = {
     } as CSSProperties,
 };
 
-// Styles pour les switchs
+// Switch styles
 export const SwitchStyles = {
     container: {
         display: "flex",
@@ -421,48 +427,33 @@ export const SwitchStyles = {
         cursor: "pointer",
     } as CSSProperties,
     
-    track: {
-        width: "40px",
+    input: {
+        width: "18px",
+        height: "18px",
+        accentColor: DiscordColors.primary,
+        cursor: "pointer",
+        margin: 0,
+    } as CSSProperties,
+    
+    slider: {
+        position: "relative",
+        display: "inline-block",
+        width: "34px",
         height: "20px",
         borderRadius: "10px",
         backgroundColor: DiscordColors.backgroundTertiary,
-        position: "relative",
         transition: "background-color 0.2s",
     } as CSSProperties,
     
-    trackChecked: {
-        backgroundColor: DiscordColors.primary,
-    } as CSSProperties,
-    
-    thumb: {
-        width: "16px",
-        height: "16px",
-        borderRadius: "50%",
-        backgroundColor: "#fff",
-        position: "absolute",
-        top: "2px",
-        left: "2px",
-        transition: "transform 0.2s",
-    } as CSSProperties,
-    
-    thumbChecked: {
-        transform: "translateX(20px)",
-    } as CSSProperties,
-    
     label: {
-        color: DiscordColors.textNormal,
-        fontSize: "14px",
-        fontWeight: 500,
-    } as CSSProperties,
-    
-    description: {
-        color: DiscordColors.textMuted,
-        fontSize: "12px",
-        marginTop: "2px",
+        position: "relative",
+        display: "inline-flex",
+        alignItems: "center",
+        cursor: "pointer",
     } as CSSProperties,
 };
 
-// Styles pour les tooltips
+// Tooltip styles
 export const TooltipStyles = {
     container: {
         position: "relative",
@@ -493,7 +484,7 @@ export const TooltipStyles = {
     } as CSSProperties,
 };
 
-// Styles pour les modales
+// Modal styles
 export const ModalStyles = {
     overlay: {
         position: "fixed",
@@ -540,9 +531,6 @@ export const ModalStyles = {
         cursor: "pointer",
         fontSize: "20px",
         padding: "4px",
-        ":hover": {
-            color: DiscordColors.textNormal,
-        },
     } as CSSProperties,
     
     content: {

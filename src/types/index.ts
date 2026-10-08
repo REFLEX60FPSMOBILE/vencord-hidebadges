@@ -1,15 +1,16 @@
-// Types pour les badges
+// Core type definitions for Shoyz Tools
 
+// Badge types
 export interface BadgeInfo {
     key: string;
     label: string;
     src: string;
-    kind: "discord" | "vencord" | "autre" | "custom";
+    kind: "discord" | "vencord" | "other" | "custom";
     category?: string;
     priority?: number;
 }
 
-// Types pour la personnalisation UI
+// UI customization types
 export interface UITheme {
     id: string;
     name: string;
@@ -32,7 +33,7 @@ export interface UICustomization {
     customCSS: string;
 }
 
-// Types pour les outils de modération
+// Moderation types
 export interface ModerationRule {
     id: string;
     name: string;
@@ -48,7 +49,7 @@ export interface ModerationStats {
     blockedUsers: number;
 }
 
-// Types pour les raccourcis clavier
+// Keyboard shortcut types
 export interface Shortcut {
     id: string;
     name: string;
@@ -59,7 +60,7 @@ export interface Shortcut {
     action: () => void;
 }
 
-// Types pour les paramètres du plugin
+// Main plugin settings
 export interface PluginSettings {
     // Badges
     hideAllBadges: boolean;
@@ -67,21 +68,25 @@ export interface PluginSettings {
     badgeCatalog: Record<string, BadgeInfo>;
     
     // UI Customization
-    uiCustomization: UICustomization;
+    uiSettings: UICustomization;
     
     // Moderation
     moderationRules: ModerationRule[];
     moderationEnabled: boolean;
+    moderationStats: ModerationStats;
     
     // Quick Actions
     quickActionsEnabled: boolean;
-    quickActions: Record<string, boolean>;
+    enabledQuickActions: Record<string, boolean>;
     
     // Performance
     lowPerformanceMode: boolean;
+    
+    // Keyboard shortcuts
+    keyboardShortcuts: Shortcut[];
 }
 
-// Types pour les actions rapides
+// Quick action types
 export interface QuickAction {
     id: string;
     name: string;
@@ -91,13 +96,13 @@ export interface QuickAction {
     category: string;
 }
 
-// Types pour les paramètres par serveur
+// Per-server settings
 export interface ServerSettings {
     hideBadges: boolean;
     hiddenBadges: Record<string, boolean>;
 }
 
-// Types pour l'export/import
+// Export/Import types
 export interface ExportData {
     version: string;
     timestamp: number;
@@ -109,11 +114,12 @@ export interface ExportData {
         moderationRules: ModerationRule[];
         moderationStats: ModerationStats;
         enabledQuickActions: Record<string, boolean>;
+        keyboardShortcuts: Shortcut[];
     };
     serverSettings: Record<string, ServerSettings>;
 }
 
-// Types pour les notifications
+// Notification types
 export interface Notification {
     id: string;
     title: string;

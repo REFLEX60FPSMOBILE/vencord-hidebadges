@@ -8,6 +8,7 @@ import ModerationTools from "./ModerationTools";
 import QuickActions from "./QuickActions";
 import ServerSettings from "./ServerSettings";
 import ExportImport from "./ExportImport";
+import OSINTDashboard from "./OSINT/OSINTDashboard";
 import { BadgeInfo, UICustomization, ModerationRule, ModerationStats, QuickAction, ServerSettings, ExportData } from "@types";
 
 interface SettingsPanelProps {
@@ -94,13 +95,14 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
     const [activeTab, setActiveTab] = useState("profile");
 
     const tabs = useMemo(() => [
-        { id: "profile", label: "Mon Profil", icon: "👤" },
-        { id: "badges", label: "Liste Badges", icon: "🏷️" },
-        { id: "servers", label: "Par Serveur", icon: "🏢" },
-        { id: "ui", label: "Personnalisation UI", icon: "🎨" },
-        { id: "moderation", label: "Modération", icon: "🛡️" },
-        { id: "actions", label: "Actions Rapides", icon: "⚡" },
-        { id: "export", label: "Export/Import", icon: "💾" },
+        { id: "profile", label: "My Profile", icon: "👤" },
+        { id: "badges", label: "Badge List", icon: "🏳️" },
+        { id: "servers", label: "Per Server", icon: "🏢" },
+        { id: "osint", label: "OSINT Tools", icon: "🔍" },
+        { id: "ui", label: "UI Customization", icon: "🎨" },
+        { id: "moderation", label: "Moderation", icon: "🛡️" },
+        { id: "actions", label: "Quick Actions", icon: "⚡" },
+        { id: "export", label: "Export/Import", icon: "📦" },
     ], []);
 
     const renderContent = useCallback(() => {
@@ -133,6 +135,11 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
                         onUpdateServerSettings={onUpdateServerSettings}
                         onResetServer={onResetServer}
                     />
+                );
+            
+            case "osint":
+                return (
+                    <OSINTDashboard />
                 );
             
             case "ui":
@@ -215,7 +222,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
             flexDirection: "column",
             gap: "12px",
         }}>
-            {/* En-tête du plugin */}
+            {/* Plugin header */}
             <div style={{
                 padding: "16px",
                 backgroundColor: DiscordColors.backgroundPrimary,
@@ -229,18 +236,18 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
                     margin: 0,
                     marginBottom: "4px",
                 }}>
-                    Discord Tools
+                    Shoyz Tools
                 </h2>
                 <p style={{
                     color: DiscordColors.textMuted,
                     fontSize: "14px",
                     margin: 0,
                 }}>
-                    Un outil complet pour personnaliser et améliorer ton expérience Discord
+                    A comprehensive Discord tool suite with OSINT capabilities
                 </p>
             </div>
 
-            {/* Onglets */}
+            {/* Tabs */}
             <div style={TabStyles.container}>
                 {tabs.map((tab) => (
                     <button
@@ -257,12 +264,12 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
                 ))}
             </div>
 
-            {/* Contenu */}
+            {/* Content */}
             <div style={TabStyles.contentActive}>
                 {renderContent()}
             </div>
 
-            {/* Pied de page */}
+            {/* Footer */}
             <div style={{
                 padding: "12px 16px",
                 backgroundColor: DiscordColors.backgroundTertiary,
@@ -271,7 +278,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
                 color: DiscordColors.textMuted,
                 textAlign: "center",
             }}>
-                Discord Tools v2.1.0 • Un plugin Vencord par REFLEX60FPSMOBILE
+                Shoyz Tools v1.0.0 - A Vencord plugin by REFLEX60FPSMOBILE
             </div>
         </div>
     );

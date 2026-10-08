@@ -21,18 +21,18 @@ const ExportImport: React.FC<ExportImportProps> = ({ onExport, onImport }) => {
             const url = URL.createObjectURL(blob);
             const a = document.createElement("a");
             a.href = url;
-            a.download = `discord-tools-export-${data.timestamp}.json`;
+            a.download = `shoyz-tools-export-${data.timestamp}.json`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
             
-            setSuccess("✅ Export réussi ! Le fichier a été téléchargé.");
+            setSuccess("✅ Export successful! File has been downloaded.");
             setError(null);
             
             setTimeout(() => setSuccess(null), 3000);
         } catch (e) {
-            setError("❌ Erreur lors de l'export : " + (e as Error).message);
+            setError("❌ Export error: " + (e as Error).message);
             setSuccess(null);
         }
     }, [onExport]);
@@ -43,168 +43,78 @@ const ExportImport: React.FC<ExportImportProps> = ({ onExport, onImport }) => {
             setSuccess(null);
             
             if (!importData.trim()) {
-                setError("❌ Veuillez coller vos données d'export.");
+                setError("❌ Please paste your export data.");
                 return;
             }
             
             const data = JSON.parse(importData) as ExportData;
             
-            // Validation basique
-            if (!data.version || !data.settings || !data.timestamp) {
-                setError("❌ Format de données invalide.");
+            if (!data.version || !data.settings) {
+                setError("❌ Invalid import data format.");
                 return;
             }
             
             onImport(data);
             setImportData("");
-            setSuccess("✅ Import réussi ! Les paramètres ont été appliqués.");
+            setSuccess("✅ Import successful! Settings have been applied.");
             
             setTimeout(() => setSuccess(null), 3000);
         } catch (e) {
-            setError("❌ Erreur lors de l'import : " + (e as Error).message);
+            setError("❌ Import error: " + (e as Error).message);
             setSuccess(null);
         }
     }, [importData, onImport]);
 
-    const handlePaste = useCallback(async () => {
-        try {
-            const text = await navigator.clipboard.readText();
-            setImportData(text);
-            setError(null);
-        } catch (e) {
-            setError("❌ Impossible de coller depuis le presse-papiers.");
-        }
-    }, []);
-
-    const handleCopyExport = useCallback(() => {
+    const handleCopyToClipboard = useCallback(() => {
         try {
             const data = onExport();
             const json = JSON.stringify(data, null, 2);
             navigator.clipboard.writeText(json);
-            setSuccess("✅ Données copiées dans le presse-papiers !");
+            setSuccess("✅ Export copied to clipboard!");
             setError(null);
             setTimeout(() => setSuccess(null), 3000);
         } catch (e) {
-            setError("❌ Impossible de copier dans le presse-papiers.");
+            setError("❌ Failed to copy to clipboard.");
         }
     }, [onExport]);
+
+    const handlePasteFromClipboard = useCallback(async () => {
+        try {
+            const text = await navigator.clipboard.readText();
+            setImportData(text);
+            setSuccess("✅ Pasted from clipboard!");
+            setTimeout(() => setSuccess(null), 3000);
+        } catch (e) {
+            setError("❌ Failed to paste from clipboard.");
+        }
+    }, []);
 
     return (
         <div style={CardStyles.container}>
             <div style={CardStyles.header}>
                 <div>
-                    <h3 style={CardStyles.title}>💾 Export/Import</h3>
+                    <h3 style={CardStyles.title}>📦 Export/Import</h3>
                     <p style={CardStyles.description}>
-                        Sauvegarde et restaure tes paramètres
+                        Backup and restore your plugin settings
                     </p>
                 </div>
             </div>
 
-            {/* Export */}
-            <div style={{
-                padding: "12px",
-                backgroundColor: DiscordColors.backgroundTertiary,
-                borderRadius: "6px",
-                marginBottom: "16px",
-            }}>
-                <h4 style={{
-                    color: DiscordColors.textNormal,
-                    fontSize: "14px",
-                    fontWeight: 600,
-                    marginBottom: "8px",
+            {/* Success/Error Messages */}
+            {success && (
+                <div style={{
+                    padding: "12px",
+                    backgroundColor: "rgba(79, 172, 254, 0.1)",
+                    border: `1px solid ${DiscordColors.success}`,
+                    borderRadius: "6px",
+                    color: DiscordColors.success,
+                    fontSize: "13px",
+                    marginBottom: "16px",
                 }}>
-                    Exporter les paramètres
-                </h4>
-                <p style={{
-                    color: DiscordColors.textMuted,
-                    fontSize: "12px",
-                    marginBottom: "12px",
-                }}>
-                    Exporte tous tes paramètres (badges, UI, modération, etc.) dans un fichier JSON.
-                </p>
-                <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
-                    <button
-                        style={ButtonStyles.primary}
-                        onClick={handleExport}
-                    >
-                        📥 Télécharger le fichier
-                    </button>
-                    <button
-                        style={ButtonStyles.secondary}
-                        onClick={handleCopyExport}
-                    >
-                        📋 Copier dans le presse-papiers
-                    </button>
+                    {success}
                 </div>
-            </div>
-
-            {/* Import */}
-            <div style={{
-                padding: "12px",
-                backgroundColor: DiscordColors.backgroundTertiary,
-                borderRadius: "6px",
-                marginBottom: "16px",
-            }}>
-                <h4 style={{
-                    color: DiscordColors.textNormal,
-                    fontSize: "14px",
-                    fontWeight: 600,
-                    marginBottom: "8px",
-                }}>
-                    Importer les paramètres
-                </h4>
-                <p style={{
-                    color: DiscordColors.textMuted,
-                    fontSize: "12px",
-                    marginBottom: "12px",
-                }}>
-                    Importe des paramètres depuis un fichier JSON ou depuis le presse-papiers.
-                </p>
-                <textarea
-                    value={importData}
-                    onChange={(e) => setImportData(e.target.value)}
-                    style={{
-                        ...InputStyles.text,
-                        minHeight: "100px",
-                        fontFamily: "monospace",
-                        whiteSpace: "pre",
-                        marginBottom: "12px",
-                    }}
-                    placeholder={`{
-  "version": "2.0.0",
-  "timestamp": 1234567890,
-  "settings": {
-    "hideAllBadges": false,
-    "hiddenBadges": {},
-    "badgeCatalog": {},
-    ...
-  }
-}`}
-                />
-                <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
-                    <button
-                        style={ButtonStyles.primary}
-                        onClick={handleImport}
-                        disabled={!importData.trim()}
-                    >
-                        📥 Importer
-                    </button>
-                    <button
-                        style={ButtonStyles.secondary}
-                        onClick={handlePaste}
-                    >
-                        📋 Coller depuis le presse-papiers
-                    </button>
-                    <button
-                        style={ButtonStyles.ghost}
-                        onClick={() => setImportData("")}
-                    >
-                        🗑️ Effacer
-                    </button>
-                </div>
-            </div>
-
-            {/* Messages d'erreur/succès */}
+            )}
+            
             {error && (
                 <div style={{
                     padding: "12px",
@@ -213,39 +123,130 @@ const ExportImport: React.FC<ExportImportProps> = ({ onExport, onImport }) => {
                     borderRadius: "6px",
                     color: DiscordColors.danger,
                     fontSize: "13px",
+                    marginBottom: "16px",
                 }}>
                     {error}
                 </div>
             )}
-            
-            {success && (
-                <div style={{
-                    padding: "12px",
-                    backgroundColor: "rgba(59, 165, 92, 0.1)",
-                    border: `1px solid ${DiscordColors.success}`,
-                    borderRadius: "6px",
-                    color: DiscordColors.success,
-                    fontSize: "13px",
-                }}>
-                    {success}
-                </div>
-            )}
 
-            {/* Conseils */}
+            {/* Export Section */}
+            <div style={CardStyles.card}>
+                <h4 style={CardStyles.cardTitle}>Export Settings</h4>
+                <p style={{
+                    fontSize: "13px",
+                    color: DiscordColors.textMuted,
+                    margin: "0 0 12px 0",
+                }}>
+                    Save your current settings to a file
+                </p>
+                <div style={{
+                    display: "flex",
+                    gap: "8px",
+                    flexWrap: "wrap",
+                }}>
+                    <button
+                        onClick={handleExport}
+                        style={ButtonStyles.primary}
+                    >
+                        💾 Download Export File
+                    </button>
+                    <button
+                        onClick={handleCopyToClipboard}
+                        style={ButtonStyles.ghost}
+                    >
+                        📋 Copy to Clipboard
+                    </button>
+                </div>
+                <p style={{
+                    fontSize: "12px",
+                    color: DiscordColors.textMuted,
+                    margin: "8px 0 0 0",
+                }}>
+                    Export includes: Badge settings, UI customization, moderation rules, server settings
+                </p>
+            </div>
+
+            {/* Import Section */}
+            <div style={CardStyles.card}>
+                <h4 style={CardStyles.cardTitle}>Import Settings</h4>
+                <p style={{
+                    fontSize: "13px",
+                    color: DiscordColors.textMuted,
+                    margin: "0 0 12px 0",
+                }}>
+                    Restore settings from a previous export
+                </p>
+                <div style={{
+                    display: "flex",
+                    gap: "8px",
+                    marginBottom: "12px",
+                    flexWrap: "wrap",
+                }}>
+                    <button
+                        onClick={handlePasteFromClipboard}
+                        style={ButtonStyles.ghost}
+                    >
+                        📋 Paste from Clipboard
+                    </button>
+                </div>
+                <textarea
+                    value={importData}
+                    onChange={(e) => setImportData(e.target.value)}
+                    placeholder={`Paste your export JSON here...
+{
+  "version": "1.0.0",
+  "timestamp": 1234567890,
+  "settings": { ... },
+  "serverSettings": { ... }
+}`}
+                    style={{
+                        ...InputStyles.textarea,
+                        minHeight: "150px",
+                        fontFamily: "monospace",
+                    }}
+                />
+                <button
+                    onClick={handleImport}
+                    disabled={!importData.trim()}
+                    style={{
+                        ...ButtonStyles.primary,
+                        marginTop: "8px",
+                    }}
+                >
+                    📥 Import Settings
+                </button>
+                <button
+                    onClick={() => setImportData("")}
+                    style={{
+                        ...ButtonStyles.ghost,
+                        marginTop: "8px",
+                    }}
+                >
+                    Clear
+                </button>
+            </div>
+
+            {/* Help Section */}
             <div style={{
-                marginTop: "12px",
-                padding: "12px",
-                backgroundColor: "var(--background-tertiary)",
-                borderRadius: "6px",
-                fontSize: "12px",
-                color: "var(--text-muted)",
+                ...CardStyles.card,
+                marginTop: "16px",
             }}>
-                <strong>💡 Conseils : </strong>
-                <ul style={{ margin: "8px 0 0 16px", padding: 0, listStyle: "disc" }}>
-                    <li>Exporte tes paramètres avant de réinstaller Discord ou Vencord</li>
-                    <li>Partage tes configurations avec tes amis (mais attention aux données sensibles)</li>
-                    <li>L'import écrase les paramètres existants, fais une sauvegarde avant</li>
-                </ul>
+                <h4 style={CardStyles.cardTitle}>Help</h4>
+                <div style={{
+                    fontSize: "13px",
+                    color: DiscordColors.textMuted,
+                    lineHeight: "1.6",
+                }}>
+                    <p style={{ margin: "0 0 12px 0" }}>
+                        <strong>Export:</strong> Saves all your plugin settings to a JSON file. You can share this file or use it as a backup.
+                    </p>
+                    <p style={{ margin: "0 0 12px 0" }}>
+                        <strong>Import:</strong> Restores settings from a previously exported JSON file. This will overwrite your current settings.
+                    </p>
+                    <p style={{ margin: "0" }}>
+                        <strong>Note:</strong> Importing settings from a different Discord account may not work correctly as some IDs may not match.
+                    </p>
+                </div>
             </div>
         </div>
     );

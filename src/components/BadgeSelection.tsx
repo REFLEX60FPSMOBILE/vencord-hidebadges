@@ -49,220 +49,219 @@ const BadgeSelection: React.FC<BadgeSelectionProps> = ({
         onToggleAll(value);
     }, [onToggleAll]);
 
-    const toggleCategory = useCallback((category: string | null) => {
-        setSelectedCategory(prev => prev === category ? null : category);
-    }, []);
-
     return (
         <div style={CardStyles.container}>
             <div style={CardStyles.header}>
                 <div>
-                    <h3 style={CardStyles.title}>🏷️ Sélection des Badges</h3>
+                    <h3 style={CardStyles.title}>🏳️ Badge List</h3>
                     <p style={CardStyles.description}>
-                        {totalCount} badges détectés • {hiddenCount} masqués
+                        Manage which badges to hide. Use search and filters to find specific badges.
                     </p>
                 </div>
+            </div>
+
+            {/* Stats */}
+            <div style={{
+                display: "flex",
+                gap: "16px",
+                marginBottom: "16px",
+                flexWrap: "wrap",
+                padding: "12px",
+                backgroundColor: DiscordColors.backgroundSecondary,
+                borderRadius: "8px",
+            }}>
+                <div style={{ textAlign: "center" }}>
+                    <div style={{ fontSize: "24px", fontWeight: "700", color: DiscordColors.textNormal }}>
+                        {totalCount}
+                    </div>
+                    <div style={{ fontSize: "11px", color: DiscordColors.textMuted, textTransform: "uppercase" }}>
+                        Total Badges
+                    </div>
+                </div>
+                <div style={{ textAlign: "center" }}>
+                    <div style={{ fontSize: "24px", fontWeight: "700", color: DiscordColors.danger }}>
+                        {hiddenCount}
+                    </div>
+                    <div style={{ fontSize: "11px", color: DiscordColors.textMuted, textTransform: "uppercase" }}>
+                        Hidden
+                    </div>
+                </div>
+                <div style={{ textAlign: "center" }}>
+                    <div style={{ fontSize: "24px", fontWeight: "700", color: DiscordColors.success }}>
+                        {totalCount - hiddenCount}
+                    </div>
+                    <div style={{ fontSize: "11px", color: DiscordColors.textMuted, textTransform: "uppercase" }}>
+                        Visible
+                    </div>
+                </div>
+            </div>
+
+            {/* Search and Filters */}
+            <div style={{
+                display: "flex",
+                gap: "8px",
+                marginBottom: "16px",
+                flexWrap: "wrap",
+            }}>
+                <input
+                    style={{ ...InputStyles.text, flex: 1, minWidth: "200px" }}
+                    placeholder="Search badges..."
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                />
+                <select
+                    style={InputStyles.select}
+                    value={selectedCategory || ""}
+                    onChange={(e) => setSelectedCategory(e.target.value || null)}
+                >
+                    <option value="">All Categories</option>
+                    {categories.map((cat) => (
+                        <option key={cat} value={cat}>
+                            {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                        </option>
+                    ))}
+                </select>
+                <button
+                    style={{
+                        ...ButtonStyles.ghost,
+                        backgroundColor: showOnlyHidden ? DiscordColors.buttonSecondary : "",
+                    }}
+                    onClick={() => setShowOnlyHidden(!showOnlyHidden)}
+                >
+                    {showOnlyHidden ? "👁️ Show All" : "🔴 Hidden Only"}
+                </button>
+            </div>
+
+            {/* Actions */}
+            <div style={{
+                display: "flex",
+                gap: "8px",
+                marginBottom: "16px",
+                flexWrap: "wrap",
+            }}>
+                <button
+                    style={ButtonStyles.danger}
+                    onClick={() => handleToggleAll(true)}
+                    disabled={totalCount === 0}
+                >
+                    🔴 Hide All
+                </button>
+                <button
+                    style={ButtonStyles.success}
+                    onClick={() => handleToggleAll(false)}
+                    disabled={totalCount === 0}
+                >
+                    🟢 Show All
+                </button>
                 <button
                     style={ButtonStyles.primary}
                     onClick={onScan}
                 >
-                    🔍 Scanner
+                    🔍 Scan for New Badges
                 </button>
             </div>
 
-            {/* Filtres */}
-            <div style={{ 
-                display: "flex", 
-                gap: "8px", 
-                flexWrap: "wrap", 
-                marginBottom: "12px"
-            }}>
-                <input
-                    style={{ ...InputStyles.text, flex: 1, minWidth: "200px" }}
-                    placeholder="Rechercher un badge..."
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                />
-                
-                <button
-                    style={{
-                        ...ButtonStyles.secondary,
-                        backgroundColor: showOnlyHidden ? DiscordColors.primary : undefined,
-                    }}
-                    onClick={() => setShowOnlyHidden(!showOnlyHidden)}
-                >
-                    {showOnlyHidden ? "✕ Masqués" : "👁️‍🗨️ Masqués seulement"}
-                </button>
-            </div>
-
-            {/* Catégories */}
-            {categories.length > 0 && (
-                <div style={{
-                    display: "flex",
-                    gap: "4px",
-                    flexWrap: "wrap",
-                    marginBottom: "12px",
-                }}>
-                    <button
-                        style={{
-                            ...ButtonStyles.ghost,
-                            backgroundColor: !selectedCategory ? DiscordColors.backgroundModifierHover : undefined,
-                            fontSize: "11px",
-                            padding: "4px 8px",
-                        }}
-                        onClick={() => toggleCategory(null)}
-                    >
-                        Tous ({allBadges.length})
-                    </button>
-                    {categories.map((category) => {
-                        const count = allBadges.filter((b) => b.kind === category).length;
-                        const categoryHidden = allBadges.filter(
-                            (b) => b.kind === category && hidden[b.key]
-                        ).length;
-                        return (
-                            <button
-                                key={category}
-                                style={{
-                                    ...ButtonStyles.ghost,
-                                    backgroundColor: selectedCategory === category 
-                                        ? DiscordColors.backgroundModifierHover 
-                                        : undefined,
-                                    fontSize: "11px",
-                                    padding: "4px 8px",
-                                    position: "relative",
-                                }}
-                                onClick={() => toggleCategory(category)}
-                            >
-                                {category} ({count - categoryHidden}/{count})
-                                {selectedCategory === category && (
-                                    <span style={{
-                                        position: "absolute",
-                                        top: "-2px",
-                                        right: "-2px",
-                                        width: "8px",
-                                        height: "8px",
-                                        backgroundColor: DiscordColors.primary,
-                                        borderRadius: "50%",
-                                    }} />
-                                )}
-                            </button>
-                        );
-                    })}
-                </div>
-            )}
-
-            {/* Actions rapides */}
-            <div style={{
-                display: "flex", 
-                gap: "8px", 
-                marginBottom: "12px",
-                flexWrap: "wrap"
-            }}>
-                <button
-                    style={ButtonStyles.primary}
-                    onClick={() => handleToggleAll(true)}
-                >
-                    🚫 Tout masquer
-                </button>
-                <button
-                    style={ButtonStyles.secondary}
-                    onClick={() => handleToggleAll(false)}
-                >
-                    👁️ Tout afficher
-                </button>
-            </div>
-
-            {/* Liste des badges */}
-            {filteredBadges.length === 0 ? (
-                <div style={{
-                    ...ListStyles.container,
-                    textAlign: "center",
-                    padding: "20px",
-                    color: DiscordColors.textMuted
-                }}>
-                    Aucun badge trouvé. Ouvre un profil utilisateur pour en détecter.
-                </div>
-            ) : (
-                <div style={ListStyles.grid}>
-                    {filteredBadges.map((badge) => {
-                        const isHidden = !!hidden[badge.key];
-                        
-                        return (
+            {/* Badge List */}
+            {filteredBadges.length > 0 ? (
+                <div style={ListStyles.container}>
+                    <div style={ListStyles.items}>
+                        {filteredBadges.map((badge) => (
                             <div
                                 key={badge.key}
                                 style={{
                                     ...ListStyles.item,
-                                    border: `1px solid ${isHidden ? DiscordColors.danger : "transparent"}`,
-                                    opacity: isHidden ? 0.6 : 1,
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: "12px",
                                     cursor: "pointer",
                                 }}
                                 onClick={() => handleToggle(badge.key)}
                             >
-                                {/* Icône du badge */}
-                                <img
-                                    src={badge.src}
-                                    alt=""
-                                    style={{
-                                        width: "28px",
-                                        height: "28px",
-                                        objectFit: "contain",
-                                        flexShrink: 0,
-                                    }}
-                                    onError={(e) => {
-                                        (e.target as HTMLImageElement).src = "https://cdn.discordapp.com/attachments/1080804322713985024/1148900734501429248/unknown.png";
-                                    }}
-                                />
-                                
-                                {/* Informations */}
-                                <div style={{ flex: 1, minWidth: 0 }}>
-                                    <div style={{
-                                        color: DiscordColors.textNormal,
-                                        fontSize: "14px",
-                                        fontWeight: 600,
-                                        whiteSpace: "nowrap",
-                                        overflow: "hidden",
-                                        textOverflow: "ellipsis",
-                                    }}>
+                                <div style={{ position: "relative" }}>
+                                    <img
+                                        src={badge.src}
+                                        alt={badge.label}
+                                        style={{
+                                            width: "32px",
+                                            height: "32px",
+                                            borderRadius: "50%",
+                                            objectFit: "contain",
+                                            opacity: hidden[badge.key] ? 0.3 : 1,
+                                            filter: hidden[badge.key] ? "grayscale(100%)" : "none",
+                                        }}
+                                    />
+                                    {hidden[badge.key] && (
+                                        <div style={{
+                                            position: "absolute",
+                                            top: "0",
+                                            left: "0",
+                                            right: "0",
+                                            bottom: "0",
+                                            background: "rgba(237, 66, 69, 0.8)",
+                                            borderRadius: "50%",
+                                            display: "flex",
+                                            alignItems: "center",
+                                            justifyContent: "center",
+                                            fontSize: "16px",
+                                            fontWeight: "bold",
+                                            color: "white",
+                                        }}>
+                                            ✕
+                                        </div>
+                                    )}
+                                </div>
+                                <div style={{ flex: 1 }}>
+                                    <div style={{ fontWeight: "600", fontSize: "14px" }}>
                                         {badge.label}
                                     </div>
-                                    <div style={{
-                                        color: DiscordColors.textMuted,
-                                        fontSize: "11px",
-                                    }}>
-                                        {badge.kind}
+                                    <div style={{ fontSize: "12px", color: DiscordColors.textMuted }}>
+                                        {badge.kind} • {badge.key}
                                     </div>
                                 </div>
-                                
-                                {/* Checkbox */}
-                                <input
-                                    type="checkbox"
-                                    checked={isHidden}
-                                    onChange={() => handleToggle(badge.key)}
-                                    onClick={(e) => e.stopPropagation()}
-                                    style={{
-                                        ...InputStyles.checkbox,
-                                        accentColor: DiscordColors.danger,
-                                    }}
-                                />
+                                <div style={{
+                                    padding: "4px 8px",
+                                    background: hidden[badge.key] 
+                                        ? DiscordColors.danger 
+                                        : DiscordColors.success,
+                                    color: "white",
+                                    borderRadius: "4px",
+                                    fontSize: "11px",
+                                    fontWeight: "500",
+                                }}>
+                                    {hidden[badge.key] ? "Hidden" : "Visible"}
+                                </div>
                             </div>
-                        );
-                    })}
+                        ))}
+                    </div>
+                </div>
+            ) : (
+                <div style={{
+                    padding: "24px",
+                    textAlign: "center",
+                    backgroundColor: DiscordColors.backgroundSecondary,
+                    borderRadius: "8px",
+                }}>
+                    <div style={{ fontSize: "24px", marginBottom: "8px" }}>🔍</div>
+                    <h4 style={{ color: DiscordColors.textNormal, margin: "0 0 4px 0" }}>
+                        No badges found
+                    </h4>
+                    <p style={{ color: DiscordColors.textMuted, fontSize: "13px", margin: "0" }}>
+                        {query || selectedCategory || showOnlyHidden
+                            ? "Try adjusting your filters or search query"
+                            : "Scan for badges by opening Discord profiles"
+                        }
+                    </p>
+                    <button
+                        onClick={onScan}
+                        style={{
+                            ...ButtonStyles.primary,
+                            marginTop: "16px",
+                        }}
+                    >
+                        🔍 Scan Now
+                    </button>
                 </div>
             )}
-
-            {/* Conseils */}
-            <div style={{
-                marginTop: "12px",
-                padding: "12px",
-                backgroundColor: "var(--background-tertiary)",
-                borderRadius: "6px",
-                fontSize: "12px",
-                color: "var(--text-muted)",
-            }}>
-                <strong>💡 Conseil : </strong>
-                Les badges que tu masques ici seront cachés <strong>sur TOUS les profils</strong> 
-                (le tien et ceux des autres). Ouvre un profil pour détecter de nouveaux badges.
-            </div>
         </div>
     );
 };

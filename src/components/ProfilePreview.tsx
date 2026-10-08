@@ -32,39 +32,38 @@ const ProfilePreview: React.FC<ProfilePreviewProps> = ({
         avatar: string;
         banner: string;
     }>({
-        name: "Ton Profil",
+        name: "Your Profile",
         avatar: "https://cdn.discordapp.com/embed/avatars/0.png",
         banner: "",
     });
     const previewRef = useRef<HTMLDivElement>(null);
 
-    // Charger les infos du profil utilisateur
+    // Load user profile info
     useEffect(() => {
         loadUserProfile();
         const interval = setInterval(loadUserProfile, 5000);
         return () => clearInterval(interval);
     }, []);
 
-    // Charger les badges depuis le catalogue
+    // Update badges from catalog
     useEffect(() => {
         updateBadgesFromCatalog();
     }, [catalog, hidden]);
 
     const loadUserProfile = useCallback(() => {
         try {
-            // Essayer de récupérer les infos du profil de l'utilisateur connecté
-            const userElement = document.querySelector(".userProfileModal, [class*='userProfile']");
-            if (userElement) {
-                const name = userElement.querySelector("[class*='username'], [class*='name']")?.textContent?.trim() || "Ton Profil";
-                const avatar = userElement.querySelector("img[class*='avatar'], img[class*='userAvatar']")?.src || 
-                    "https://cdn.discordapp.com/embed/avatars/0.png";
-                const banner = userElement.querySelector("[class*='banner'], [class*='profileBanner']")?.getAttribute("src") || "";
-                
-                setPreviewUser({ name, avatar, banner });
-            }
+            // Try to get user info from Discord DOM
+            const userNameElement = document.querySelector("[class*='username'], [class*='userName']");
+            const avatarElement = document.querySelector("[class*='avatar'], [class*='userAvatar'] img");
+            const bannerElement = document.querySelector("[class*='banner'], [class*='userBanner'] img");
+
+            const name = userNameElement?.textContent?.trim() || "Your Profile";
+            const avatar = avatarElement?.getAttribute("src") || "https://cdn.discordapp.com/embed/avatars/0.png";
+            const banner = bannerElement?.getAttribute("src") || "";
+
+            setPreviewUser({ name, avatar, banner });
         } catch (e) {
-            // Utiliser les infos par défaut
-            console.log("Impossible de charger le profil utilisateur", e);
+            // Use defaults if unable to get user info
         }
     }, []);
 
@@ -81,263 +80,195 @@ const ProfilePreview: React.FC<ProfilePreviewProps> = ({
             });
         }
         
-        // Trier par type puis par nom
-        badgeList.sort((a, b) => {
-            const order = { discord: 0, vencord: 1, custom: 2, autre: 3 };
-            return (order[a.kind] ?? 4) - (order[b.kind] ?? 4) || a.label.localeCompare(b.label);
-        });
-        
         setBadges(badgeList);
     }, [catalog, hidden]);
 
-    const handleBadgeClick = useCallback((key: string, e: React.MouseEvent) => {
-        e.stopPropagation();
-        onToggle(key);
+    const handleBadgeClick = useCallback((badgeKey: string) => {
+        onToggle(badgeKey);
     }, [onToggle]);
 
-    const toggleShowAll = useCallback(() => {
-        setShowAll(!showAll);
-    }, [showAll]);
-
-    const displayedBadges = showAll ? badges : badges.slice(0, 12);
+    const visibleBadges = showAll ? badges : badges.slice(0, 12);
+    const hiddenCount = badges.filter(b => b.isHidden).length;
+    const totalCount = badges.length;
 
     return (
         <div style={CardStyles.container}>
             <div style={CardStyles.header}>
                 <div>
-                    <h3 style={CardStyles.title}>👤 Aperçu du Profil</h3>
+                    <h3 style={CardStyles.title}>👤 My Profile</h3>
                     <p style={CardStyles.description}>
-                        Clique sur les badges pour les masquer/afficher
+                        Click on badges to hide or show them. Changes apply immediately everywhere in Discord.
                     </p>
-                </div>
-                <div style={{ display: "flex", gap: "8px" }}>
-                    <button
-                        style={ButtonStyles.secondary}
-                        onClick={onScan}
-                    >
-                        🔍 Scanner
-                    </button>
-                    <button
-                        style={ButtonStyles.ghost}
-                        onClick={toggleShowAll}
-                    >
-                        {showAll ? "Moins" : `+${badges.length - 12}`}
-                    </button>
                 </div>
             </div>
 
-            {/* Aperçu du profil */}
-            <div
-                ref={previewRef}
-                style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    padding: "20px",
-                    backgroundColor: DiscordColors.backgroundTertiary,
-                    borderRadius: "8px",
-                    marginBottom: "16px",
-                    position: "relative",
-                    minHeight: "200px",
-                }}
-            >
-                {/* Bannière */}
+            {/* Profile Preview Card */}
+            <div style={{
+                backgroundColor: DiscordColors.backgroundSecondary,
+                borderRadius: "8px",
+                padding: "20px",
+                marginBottom: "16px",
+                textAlign: "center",
+                position: "relative",
+                overflow: "hidden",
+            }}>
+                {/* Banner */}
                 {previewUser.banner && (
-                    <div style={{
-                        width: "100%",
-                        height: "60px",
-                        borderRadius: "8px 8px 0 0",
-                        overflow: "hidden",
-                        marginBottom: "12px",
-                        background: `url(${previewUser.banner}) center/cover`,
-                    }} />
-                )}
-
-                {/* Avatar */}
-                <div style={{
-                    width: "80px",
-                    height: "80px",
-                    borderRadius: "50%",
-                    overflow: "hidden",
-                    border: `4px solid ${DiscordColors.backgroundPrimary}`,
-                    marginBottom: "12px",
-                }}>
                     <img
-                        src={previewUser.avatar}
-                        alt="Avatar"
+                        src={previewUser.banner}
+                        alt=""
                         style={{
                             width: "100%",
-                            height: "100%",
+                            height: "80px",
                             objectFit: "cover",
-                        }}
-                        onError={(e) => {
-                            (e.target as HTMLImageElement).src = "https://cdn.discordapp.com/embed/avatars/0.png";
+                            borderRadius: "8px 8px 0 0",
+                            position: "absolute",
+                            top: "0",
+                            left: "0",
                         }}
                     />
-                </div>
+                )}
 
-                {/* Nom */}
-                <h4 style={{
-                    color: DiscordColors.textNormal,
-                    fontSize: "18px",
-                    fontWeight: 700,
-                    margin: "0 0 8px 0",
-                }}>
-                    {previewUser.name}
-                </h4>
+                <div style={{ position: "relative", zIndex: 1 }}>
+                    {/* Avatar */}
+                    <div style={{
+                        width: "80px",
+                        height: "80px",
+                        borderRadius: "50%",
+                        margin: "0 auto 12px",
+                        border: `4px solid ${DiscordColors.backgroundSecondary}`,
+                        background: DiscordColors.backgroundPrimary,
+                    }}>
+                        <img
+                            src={previewUser.avatar}
+                            alt=""
+                            style={{
+                                width: "100%",
+                                height: "100%",
+                                borderRadius: "50%",
+                                objectFit: "cover",
+                            }}
+                        />
+                    </div>
 
-                {/* Badges */}
-                {displayedBadges.length > 0 ? (
+                    {/* Username */}
+                    <h4 style={{
+                        color: DiscordColors.textNormal,
+                        fontSize: "18px",
+                        fontWeight: 700,
+                        margin: "0 0 4px 0",
+                    }}>
+                        {previewUser.name}
+                    </h4>
+
+                    {/* Badge Statistics */}
+                    <p style={{
+                        color: DiscordColors.textMuted,
+                        fontSize: "13px",
+                        margin: "0",
+                    }}>
+                        {totalCount} badges detected • {hiddenCount} hidden
+                    </p>
+
+                    {/* Badges Preview */}
                     <div style={{
                         display: "flex",
                         flexWrap: "wrap",
-                        gap: "8px",
                         justifyContent: "center",
-                        width: "100%",
-                        padding: "12px 0",
+                        gap: "8px",
+                        marginTop: "16px",
+                        padding: "12px",
+                        backgroundColor: "rgba(0,0,0,0.1)",
+                        borderRadius: "8px",
                     }}>
-                        {displayedBadges.map((badge) => (
+                        {visibleBadges.map((badge) => (
                             <div
                                 key={badge.key}
+                                onClick={() => handleBadgeClick(badge.key)}
                                 style={{
                                     position: "relative",
                                     cursor: "pointer",
-                                    transition: "all 0.2s",
+                                    transition: "all 0.2s ease",
                                     opacity: badge.isHidden ? 0.3 : 1,
-                                    transform: badge.isHidden ? "scale(0.9)" : "scale(1)",
+                                    filter: badge.isHidden ? "grayscale(100%)" : "none",
                                 }}
-                                onClick={(e) => handleBadgeClick(badge.key, e)}
                             >
-                                {/* Badge */}
                                 <img
                                     src={badge.src}
                                     alt={badge.label}
                                     style={{
                                         width: "32px",
                                         height: "32px",
+                                        borderRadius: "50%",
                                         objectFit: "contain",
-                                        borderRadius: "4px",
-                                        backgroundColor: DiscordColors.backgroundPrimary,
-                                        padding: "2px",
-                                    }}
-                                    onError={(e) => {
-                                        (e.target as HTMLImageElement).src = "https://cdn.discordapp.com/attachments/1080804322713985024/1148900734501429248/unknown.png";
                                     }}
                                 />
-                                
-                                {/* Overlay de masquage */}
                                 {badge.isHidden && (
                                     <div style={{
                                         position: "absolute",
-                                        top: 0,
-                                        left: 0,
-                                        right: 0,
-                                        bottom: 0,
-                                        backgroundColor: "rgba(237, 66, 69, 0.7)",
-                                        borderRadius: "4px",
+                                        top: "0",
+                                        left: "0",
+                                        right: "0",
+                                        bottom: "0",
+                                        background: "rgba(237, 66, 69, 0.8)",
+                                        borderRadius: "50%",
                                         display: "flex",
                                         alignItems: "center",
                                         justifyContent: "center",
+                                        fontSize: "16px",
+                                        fontWeight: "bold",
+                                        color: "white",
                                     }}>
-                                        <span style={{
-                                            color: "white",
-                                            fontSize: "16px",
-                                            fontWeight: "bold",
-                                        }}>
-                                            ✕
-                                        </span>
+                                        ✕
                                     </div>
                                 )}
-                                
-                                {/* Tooltip */}
-                                <div style={{
-                                    position: "absolute",
-                                    bottom: "100%",
-                                    left: "50%",
-                                    transform: "translateX(-50%)",
-                                    backgroundColor: DiscordColors.backgroundPrimary,
-                                    color: DiscordColors.textNormal,
-                                    padding: "4px 8px",
-                                    borderRadius: "4px",
-                                    fontSize: "11px",
-                                    whiteSpace: "nowrap",
-                                    opacity: 0,
-                                    visibility: "hidden",
-                                    transition: "opacity 0.2s, visibility 0.2s",
-                                    zIndex: 10,
-                                }}>
-                                    {badge.label}
-                                </div>
                             </div>
                         ))}
                     </div>
-                ) : (
-                    <div style={{
-                        color: DiscordColors.textMuted,
-                        fontSize: "13px",
-                        textAlign: "center",
-                        padding: "20px",
-                    }}>
-                        Aucun badge détecté. Ouvre un profil pour en scanner.
-                    </div>
-                )}
 
-                {/* Indicateur de badges masqués */}
-                {badges.some(b => b.isHidden) && (
-                    <div style={{
-                        position: "absolute",
-                        top: "12px",
-                        right: "12px",
-                        backgroundColor: DiscordColors.danger,
-                        color: "white",
-                        padding: "4px 8px",
-                        borderRadius: "12px",
-                        fontSize: "11px",
-                        fontWeight: 600,
-                    }}>
-                        {badges.filter(b => b.isHidden).length} masqué(s)
-                    </div>
-                )}
+                    {/* Show More / Less */}
+                    {totalCount > 12 && (
+                        <button
+                            onClick={() => setShowAll(!showAll)}
+                            style={{
+                                ...ButtonStyles.ghost,
+                                marginTop: "12px",
+                                fontSize: "12px",
+                            }}
+                        >
+                            {showAll ? "▲ Show Less" : `▼ Show All +${totalCount - 12}`}
+                        </button>
+                    )}
+                </div>
             </div>
 
-            {/* Légende */}
+            {/* Instructions */}
             <div style={{
-                display: "flex",
-                gap: "16px",
-                flexWrap: "wrap",
-                fontSize: "12px",
+                padding: "12px 16px",
+                backgroundColor: DiscordColors.backgroundTertiary,
+                borderRadius: "8px",
+                fontSize: "13px",
                 color: DiscordColors.textMuted,
             }}>
-                <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-                    <span style={{ color: DiscordColors.primary }}>🏷️</span>
-                    <span>Badge Discord</span>
+                <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "8px" }}>
+                    <span>💡</span>
+                    <strong>How to use:</strong>
                 </div>
-                <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-                    <span style={{ color: "#9b59b6" }}>💜</span>
-                    <span>Badge Vencord</span>
+                <ol style={{ margin: "0", paddingLeft: "24px", lineHeight: "1.5" }}>
+                    <li>Open any Discord profile (yours or someone else's)</li>
+                    <li>Badges will appear in your profile preview above</li>
+                    <li><strong>Click on a badge</strong> to hide it (it will show a red ✕)</li>
+                    <li><strong>Click again</strong> to show it</li>
+                    <li>Changes apply <strong>immediately</strong> to ALL profiles (yours AND others)</li>
+                </ol>
+                <div style={{ marginTop: "12px", paddingTop: "12px", borderTop: `1px solid ${DiscordColors.border}` }}>
+                    <button
+                        onClick={onScan}
+                        style={ButtonStyles.primary}
+                    >
+                        🔍 Scan for New Badges
+                    </button>
                 </div>
-                <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-                    <span style={{ color: DiscordColors.success }}>🟢</span>
-                    <span>Badge Personnalisé</span>
-                </div>
-                <div style={{ display: "flex", alignItems: "center", gap: "4px", marginLeft: "auto" }}>
-                    <span style={{ color: DiscordColors.danger }}>✕</span>
-                    <span>Masqué</span>
-                </div>
-            </div>
-
-            {/* Conseils */}
-            <div style={{
-                marginTop: "12px",
-                padding: "12px",
-                backgroundColor: "var(--background-tertiary)",
-                borderRadius: "6px",
-                fontSize: "12px",
-                color: "var(--text-muted)",
-            }}>
-                <strong>💡 Conseil : </strong>
-                Les badges que tu masques ici seront cachés <strong>partout</strong> : 
-                sur ton profil ET sur les profils des autres utilisateurs.
             </div>
         </div>
     );

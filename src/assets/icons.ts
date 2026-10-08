@@ -1,20 +1,20 @@
-// Icônes pour le plugin Discord Tools
-// Ces icônes sont utilisées dans l'interface du plugin
+// Icons for Shoyz Tools plugin
+// These icons are used in the plugin interface
 
-// Icônes des catégories
+// Category icons
 export const CategoryIcons = {
-    badges: "🏷️",
+    badges: "🏳️",
     ui: "🎨",
     moderation: "🛡️",
     actions: "⚡",
     settings: "⚙️",
 };
 
-// Icônes des actions
+// Action icons
 export const ActionIcons = {
     toggle: "↔️",
-    hide: "👁️‍🗨️",
-    show: "👁️",
+    hide: "👈🔒",
+    show: "👉",
     scan: "🔍",
     reset: "🔄",
     delete: "🗑️",
@@ -29,22 +29,22 @@ export const ActionIcons = {
     info: "ℹ️",
 };
 
-// Icônes des types de badges
+// Badge type icons
 export const BadgeTypeIcons = {
-    discord: "💙",
-    vencord: "💜",
-    custom: "🟢",
-    other: "⚪",
+    discord: "💎",
+    vencord: "💙",
+    custom: "🌟",
+    other: "⚫",
 };
 
-// Icônes des actions de modération
+// Moderation icons
 export const ModerationIcons = {
     hide: "🚫",
     warn: "⚠️",
     block: "🛑",
 };
 
-// Icônes des thèmes
+// Theme icons
 export const ThemeIcons = {
     default: "🎨",
     dark: "🌙",
@@ -54,16 +54,16 @@ export const ThemeIcons = {
     custom: "✨",
 };
 
-// Icônes des options UI
+// UI options icons
 export const UIIcons = {
     theme: "🎨",
     timestamps: "⏰",
     avatars: "👤",
-    compact: "📐",
+    compact: "📄",
     css: "💻",
 };
 
-// Icônes des statistiques
+// Statistics icons
 export const StatsIcons = {
     messages: "💬",
     hidden: "🚫",
@@ -71,15 +71,15 @@ export const StatsIcons = {
     blocked: "🛑",
 };
 
-// Icônes des onglets
+// Tab icons
 export const TabIcons = {
-    badges: "🏷️",
+    badges: "🏳️",
     ui: "🎨",
     moderation: "🛡️",
     actions: "⚡",
 };
 
-// Icônes pour les notifications
+// Notification icons
 export const NotificationIcons = {
     info: "ℹ️",
     success: "✅",
@@ -87,7 +87,7 @@ export const NotificationIcons = {
     error: "❌",
 };
 
-// Export de toutes les icônes
+// Export all icons
 export const Icons = {
     ...CategoryIcons,
     ...ActionIcons,
@@ -100,21 +100,21 @@ export const Icons = {
     ...NotificationIcons,
 };
 
-// Fonction pour obtenir une icône aléatoire
+// Function to get a random icon
 export function getRandomIcon(): string {
     const allIcons = Object.values(Icons);
     return allIcons[Math.floor(Math.random() * allIcons.length)];
 }
 
-// Fonction pour obtenir une icône basée sur un ID
+// Function to get icon by ID
 export function getIconById(id: string): string {
     const icons: Record<string, string> = {
         ...Icons,
-        // Ajouter des icônes spécifiques
-        "toggle-badges": "🏷️",
+        // Specific icons
+        "toggle-badges": "🏳️",
         "toggle-avatars": "👤",
         "toggle-timestamps": "⏰",
-        "compact-mode": "📐",
+        "compact-mode": "📄",
         "clear-cache": "🗑️",
         "scan-badges": "🔍",
     };

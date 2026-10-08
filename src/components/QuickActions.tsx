@@ -39,124 +39,133 @@ const QuickActions: React.FC<QuickActionsProps> = ({
         <div style={CardStyles.container}>
             <div style={CardStyles.header}>
                 <div>
-                    <h3 style={CardStyles.title}>Actions Rapides</h3>
+                    <h3 style={CardStyles.title}>⚡ Quick Actions</h3>
                     <p style={CardStyles.description}>
-                        Accès rapide à des fonctionnalités utiles
+                        One-click access to useful features
                     </p>
                 </div>
             </div>
 
             <div style={ListStyles.container}>
                 {Object.entries(categories).map(([category, categoryActions]) => (
-                    <div key={category} style={{ marginBottom: "12px" }}>
+                    <div key={category} style={{ marginBottom: "16px" }}>
                         <h4 style={{
+                            fontSize: "14px",
+                            fontWeight: "600",
                             color: DiscordColors.textNormal,
-                            fontSize: "13px",
-                            fontWeight: 600,
-                            marginBottom: "6px",
-                            textTransform: "uppercase",
-                            letterSpacing: "0.5px",
+                            margin: "0 0 8px 0",
+                            paddingBottom: "4px",
+                            borderBottom: `1px solid ${DiscordColors.border}`,
                         }}>
                             {category}
                         </h4>
                         <div style={{
                             display: "grid",
                             gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
-                            gap: "6px",
+                            gap: "8px",
                         }}>
                             {categoryActions.map((action) => (
-                                <div
+                                <button
                                     key={action.id}
+                                    onClick={() => executeAction(action.id)}
                                     style={{
                                         display: "flex",
                                         alignItems: "center",
                                         gap: "8px",
-                                        padding: "8px",
-                                        backgroundColor: DiscordColors.backgroundTertiary,
-                                        borderRadius: "4px",
+                                        padding: "12px",
+                                        backgroundColor: DiscordColors.backgroundSecondary,
+                                        border: enabledActions[action.id]
+                                            ? `2px solid ${DiscordColors.success}`
+                                            : `1px solid ${DiscordColors.border}`,
+                                        borderRadius: "6px",
+                                        color: DiscordColors.textNormal,
                                         cursor: "pointer",
-                                        transition: "all 0.2s",
+                                        fontSize: "13px",
+                                        textAlign: "left",
+                                        transition: "all 0.2s ease",
                                         ":hover": {
-                                            backgroundColor: DiscordColors.backgroundModifierHover,
+                                            backgroundColor: DiscordColors.backgroundTertiary,
                                         },
                                     }}
-                                    onClick={() => executeAction(action.id)}
                                 >
-                                    <div style={{
-                                        width: "32px",
-                                        height: "32px",
-                                        borderRadius: "6px",
-                                        backgroundColor: enabledActions[action.id]
-                                            ? DiscordColors.success
-                                            : DiscordColors.backgroundSecondary,
-                                        display: "flex",
-                                        alignItems: "center",
-                                        justifyContent: "center",
-                                        flexShrink: 0,
-                                    }}>
-                                        <span style={{ fontSize: "16px" }}>{action.icon || "⚡"}</span>
-                                    </div>
-                                    <div style={{ flex: 1, minWidth: 0 }}>
-                                        <div style={{
-                                            color: DiscordColors.textNormal,
-                                            fontSize: "13px",
-                                            fontWeight: 500,
-                                            whiteSpace: "nowrap",
-                                            overflow: "hidden",
-                                            textOverflow: "ellipsis",
-                                        }}>
+                                    <span style={{ fontSize: "16px" }}>{action.icon}</span>
+                                    <div>
+                                        <div style={{ fontWeight: "600", fontSize: "13px" }}>
                                             {action.name}
                                         </div>
                                         <div style={{
-                                            color: DiscordColors.textMuted,
                                             fontSize: "11px",
+                                            color: DiscordColors.textMuted,
+                                            marginTop: "2px",
                                         }}>
                                             {action.description}
                                         </div>
                                     </div>
-                                    <div
-                                        style={{
-                                            width: "20px",
-                                            height: "20px",
-                                            borderRadius: "4px",
-                                            backgroundColor: enabledActions[action.id]
-                                                ? DiscordColors.success
-                                                : DiscordColors.backgroundSecondary,
-                                            display: "flex",
-                                            alignItems: "center",
-                                            justifyContent: "center",
-                                            cursor: "pointer",
-                                        }}
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            toggleAction(action.id);
-                                        }}
-                                    >
-                                        <span style={{ 
-                                            fontSize: "12px",
-                                            color: enabledActions[action.id] ? "#fff" : DiscordColors.textMuted
-                                        }}>
-                                            {enabledActions[action.id] ? "✓" : "✗"}
-                                        </span>
-                                    </div>
-                                </div>
+                                </button>
                             ))}
                         </div>
                     </div>
                 ))}
             </div>
 
-            {/* Conseils */}
+            {/* Keyboard Shortcuts Help */}
             <div style={{
-                marginTop: "12px",
-                padding: "12px",
-                backgroundColor: "var(--background-tertiary)",
-                borderRadius: "6px",
-                fontSize: "12px",
-                color: "var(--text-muted)",
+                ...CardStyles.card,
+                marginTop: "16px",
             }}>
-                <strong>Conseil : </strong>
-                Active les actions que tu utilises souvent. Tu peux les exécuter rapidement depuis le menu ou avec des raccourcis clavier.
+                <h4 style={CardStyles.cardTitle}>Keyboard Shortcuts</h4>
+                <p style={{
+                    fontSize: "13px",
+                    color: DiscordColors.textMuted,
+                    margin: "0 0 12px 0",
+                }}>
+                    Use these keyboard shortcuts for quick access
+                </p>
+                <div style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
+                    gap: "8px",
+                }}>
+                    <div style={{
+                        padding: "8px",
+                        backgroundColor: DiscordColors.backgroundSecondary,
+                        borderRadius: "4px",
+                        fontSize: "12px",
+                    }}>
+                        <div style={{ fontWeight: "600", color: DiscordColors.textNormal }}>
+                            Ctrl + B
+                        </div>
+                        <div style={{ color: DiscordColors.textMuted }}>
+                            Toggle Badges
+                        </div>
+                    </div>
+                    <div style={{
+                        padding: "8px",
+                        backgroundColor: DiscordColors.backgroundSecondary,
+                        borderRadius: "4px",
+                        fontSize: "12px",
+                    }}>
+                        <div style={{ fontWeight: "600", color: DiscordColors.textNormal }}>
+                            Ctrl + U
+                        </div>
+                        <div style={{ color: DiscordColors.textMuted }}>
+                            Toggle UI
+                        </div>
+                    </div>
+                    <div style={{
+                        padding: "8px",
+                        backgroundColor: DiscordColors.backgroundSecondary,
+                        borderRadius: "4px",
+                        fontSize: "12px",
+                    }}>
+                        <div style={{ fontWeight: "600", color: DiscordColors.textNormal }}>
+                            Ctrl + Shift + S
+                        </div>
+                        <div style={{ color: DiscordColors.textMuted }}>
+                            Scan Badges
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     );
