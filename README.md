@@ -30,7 +30,7 @@
 
 Join the official **Shoyz Tools** Discord server for support, updates, and community discussions:
 
-**[discord.gg/nightsmpp](https://discord.gg/nightsmpp)**
+**[https://discord.gg/56YDGN2tZc](https://discord.gg/56YDGN2tZc)**
 
 ## 📦 Installation
 
@@ -43,7 +43,7 @@ Join the official **Shoyz Tools** Discord server for support, updates, and commu
 
 - **Changelog**: [CHANGELOG.md](./CHANGELOG.md)
 - **Features**: See the Features section above
-- **Support**: Join our [Discord](https://discord.gg/nightsmpp)
+- **Support**: Join our [Discord](https://discord.gg/56YDGN2tZc)
 
 ## 🛡️ License
 
