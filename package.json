@@ -1,7 +1,7 @@
 {
-  "name": "shoyz-tools",
+  "name": "vencord-hidebadges",
   "version": "1.0.0",
-  "description": "Shoyz Tools - A comprehensive Discord tool suite for Vencord with OSINT capabilities, badge management, UI customization, and server analysis",
+  "description": "HideBadgesGUI — a Vencord plugin that detects profile badges (Discord, Vencord, custom) and lets you choose which to hide, with icon preview, search, Hide all / Show all, and instant application without reloading Discord.",
   "main": "dist/index.js",
   "scripts": {
     "build": "echo 'Build handled by Vencord root build system' && exit 0",
@@ -16,13 +16,11 @@
     "vencord",
     "discord",
     "plugin",
-    "osint",
-    "security",
     "badges",
     "customization",
-    "moderation",
     "ui-tools",
-    "threat-intelligence"
+    "hide-badges",
+    "profile"
   ],
   "author": "REFLEX60FPSMOBILE",
   "license": "GPL-3.0-or-later",
@@ -48,13 +46,14 @@
     "eslint": "^8.0.0",
     "eslint-plugin-react": "^7.33.0",
     "eslint-plugin-react-hooks": "^4.6.0",
+    "jsdom": "^24.0.0",
     "typescript": "^5.0.0",
     "vitest": "^1.0.0"
   },
   "vencord": {
     "id": "shoyzTools",
     "name": "Shoyz Tools",
-    "description": "Comprehensive Discord tool suite with OSINT capabilities, badge management, UI customization, and server analysis",
+    "description": "Comprehensive Discord tool suite with badge management, UI customization, moderation, and server analysis",
     "version": "1.0.0",
     "author": "REFLEX60FPSMOBILE"
   }
