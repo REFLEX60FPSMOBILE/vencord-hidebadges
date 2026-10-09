@@ -17,12 +17,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Unit testing infrastructure with Vitest
 - Characterization tests for utility functions
-- CI/CD pipeline with GitHub Actions (lint, typecheck, test)
 - Issue templates (bug report, feature request)
 - Pull request template with checklist
 - CONTRIBUTING.md with development guidelines
 - CHANGELOG.md for tracking changes
-- README.fr.md for French-speaking users
 - Test scripts in package.json
 
 ### Changed
