@@ -2,12 +2,13 @@
 
 ![Vencord Plugin](https://img.shields.io/badge/Vencord-Plugin-blue?style=for-the-badge&logo=discord)
 ![Version](https://img.shields.io/badge/Version-1.0.0-green?style=for-the-badge)
-![License](https://img.shields.io/badge/License-GPL--3.0-or-later-orange?style=for-the-badge)
+![License](https://img.shields.io/badge/License-GPL--3.0--or--later-orange?style=for-the-badge)
 ![TypeScript](https://img.shields.io/badge/TypeScript-100%25-blue?style=for-the-badge&logo=typescript)
-![Lines of Code](https://img.shields.io/badge/Code-15000%2B-lines-green?style=for-the-badge)
 
 **Shoyz Tools** is a comprehensive **Vencord** plugin that transforms your Discord experience. 
 **More than just a badge hider, it's an all-in-one tool suite** for customization, moderation, OSINT, and productivity.
+
+📖 **[Lire en français](README.fr.md)**
 
 ## OSINT Features
 
@@ -97,13 +98,13 @@ Shoyz Tools includes powerful OSINT (Open Source Intelligence) capabilities insp
 ### Method 1: Git Installation (Recommended)
 
 1. **Install Vencord** from source: [Vencord Documentation](https://docs.vencord.dev/installing/)
-2. Create the `src/userplugins/` directory if it doesn't exist
-3. Clone this repository into the plugins folder:
+2. Navigate to your Vencord installation and create `src/userplugins/` if it doesn't exist
+3. Clone this repository into the userplugins folder:
    ```bash
    cd src/userplugins
-   git clone https://github.com/REFLEX60FPSMOBILE/shoyz-tools
+   git clone https://github.com/REFLEX60FPSMOBILE/vencord-hidebadges shoyz-tools
    ```
-4. Build and inject:
+4. From the Vencord root directory, build and inject:
    ```bash
    pnpm build
    pnpm inject
@@ -111,16 +112,18 @@ Shoyz Tools includes powerful OSINT (Open Source Intelligence) capabilities insp
 5. Reload Discord (Ctrl+R)
 6. Enable **Shoyz Tools** in: Settings > Vencord > Plugins
 
-### Method 2: Direct Download
+### Method 2: Manual Download
 
-1. Download the ZIP from [releases](https://github.com/REFLEX60FPSMOBILE/shoyz-tools/releases)
-2. Extract contents to `src/userplugins/shoyz-tools/`
-3. Run:
+1. Download the latest code from this repository
+2. Extract contents to `[vencord-root]/src/userplugins/shoyz-tools/`
+3. From the Vencord root directory:
    ```bash
    pnpm build
    pnpm inject
    ```
 4. Reload Discord and enable the plugin
+
+> **Note**: This is a Vencord userplugin. It must be placed in the `userplugins` directory of your Vencord installation and built using Vencord's build system.
 
 ---
 
@@ -200,8 +203,8 @@ Discord Settings > Vencord > Plugins > Shoyz Tools > Configure
 
 ### Available Tabs
 
-| Tab | Description | New |
-|-----|-------------|-----|
+| Tab | Description | Added |
+|-----|-------------|-------|
 | My Profile | Profile preview + visual badge selection | v1.0.0 |
 | Badge List | Complete list with search and filtering | v1.0.0 |
 | Per Server | Server-specific settings | v1.0.0 |
@@ -275,115 +278,75 @@ The OSINT (Open Source Intelligence) module provides educational insights into p
 
 ## Development
 
-### Prerequisites
-- Node.js v16+
-- pnpm
-- Vencord installed
+See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed development setup and guidelines.
 
-### Commands
+### Quick Start
+
 ```bash
 # Install dependencies
 pnpm install
 
-# Build plugin
-pnpm build
-
-# Build in watch mode
-pnpm dev
-
-# Inject into Discord
-pnpm inject
-
-# Code verification
-pnpm lint
+# Type checking
 pnpm typecheck
+
+# Linting
+pnpm lint
+
+# Run tests
+pnpm test
+
+# Run tests in watch mode
+pnpm test:watch
 ```
 
 ### Project Structure
+
 ```
 .
 ├── src/
 │   ├── index.tsx              # Plugin entry point
-│   ├── components/
-│   │   ├── SettingsPanel.tsx  # Main configuration panel
-│   │   ├── ProfilePreview.tsx  # Profile preview + visual selection
-│   │   ├── BadgeSelection.tsx  # Badge list with filtering
-│   │   ├── ServerSettings.tsx  # Per-server configuration
-│   │   ├── UICustomization.tsx # UI customization
-│   │   ├── ModerationTools.tsx # Moderation system
-│   │   ├── QuickActions.tsx    # One-click actions
-│   │   ├── ExportImport.tsx    # Configuration backup
-│   │   └── OSINT/
-│   │       ├── OSINTDashboard.tsx # Main OSINT interface
-│   │       ├── UserLookup.tsx     # User search and analysis
-│   │       ├── ServerAnalysis.tsx # Server analysis
-│   │       └── MessageScanner.tsx  # Message scanning
-│   ├── types/
-│   │   ├── index.ts           # Core type definitions
-│   │   └── osint.ts           # OSINT type definitions
-│   ├── utils/
-│   │   ├── constants.ts        # Constants and configurations
-│   │   ├── helpers.ts          # Utility functions
-│   │   ├── osintHelpers.ts     # OSINT utility functions
-│   │   └── serverHelpers.ts    # Server utility functions
-│   └── styles/
-│       └── index.ts           # Discord-like styling
-└── package.json
-└── tsconfig.json
-└── .eslintrc.json
-└── README.md
+│   ├── components/            # React components
+│   ├── types/                 # TypeScript type definitions
+│   ├── utils/                 # Utility functions
+│   ├── styles/                # Styling utilities
+│   └── assets/                # Static assets
+├── tests/                     # Test files
+├── package.json
+├── tsconfig.json
+└── vitest.config.ts
 ```
 
 ---
 
 ## Contributing
 
-Contributions are welcome! Here's how to contribute:
-
-1. **Fork** the repository
-2. Create a branch for your feature (`git checkout -b feature/your-feature`)
-3. **Commit** your changes (`git commit -m 'Add your feature'`)
-4. **Push** to the branch (`git push origin feature/your-feature`)
-5. Open a **Pull Request**
-
-### Contribution Rules
-- Follow existing code style
-- Add comments for complex code
-- Test your changes before committing
-- Update documentation if necessary
+Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
 
 ---
 
 ## Reporting Bugs
 
-If you find a bug, please:
-
-1. Check if the bug has already been reported
-2. Open an **Issue** on GitHub with:
-   - Clear bug description
-   - Steps to reproduce
-   - Screenshots if possible
-   - Your Vencord and Discord versions
-   - Your operating system and browser
+Found a bug? Please use our [bug report template](.github/ISSUE_TEMPLATE/bug_report.yml) to report it.
 
 ---
 
 ## Legal Notice
 
-**IMPORTANT**: This plugin operates within Discord's Terms of Service and only processes publicly available data through Discord's official API. No private data is accessed, stored, or transmitted. All OSINT features are for educational purposes only and use only information that is already publicly visible.
+**IMPORTANT**: This plugin is designed for educational and personal customization purposes only.
 
-- All data displayed is **publicly available** through Discord's API
+- All data displayed is **publicly available** through Discord's official API
 - No **scraping** or **data collection** beyond what Discord provides
 - No **private information** is accessed or stored
-- All features are **100% legal** and compliant with Discord's ToS
+- OSINT features analyze only publicly visible information
 - For **educational purposes only**
+
+**Use responsibly and at your own risk.** The authors are not responsible for misuse of this software.
 
 ---
 
 ## Support
 
-- **GitHub Issues**: [https://github.com/REFLEX60FPSMOBILE/shoyz-tools/issues](https://github.com/REFLEX60FPSMOBILE/shoyz-tools/issues)
-- **Discord**: Join the Vencord server for support
+- **GitHub Issues**: [https://github.com/REFLEX60FPSMOBILE/vencord-hidebadges/issues](https://github.com/REFLEX60FPSMOBILE/vencord-hidebadges/issues)
 - **Vencord Documentation**: [https://docs.vencord.dev](https://docs.vencord.dev)
 
 ---
@@ -395,6 +358,12 @@ If you find a bug, please:
 - All contributors and testers
 - The Discord community for support
 - **YOU** for using this plugin!
+
+---
+
+## License
+
+This project is licensed under the GNU General Public License v3.0 or later - see the [LICENSE](LICENSE) file for details.
 
 ---
 
