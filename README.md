@@ -8,8 +8,6 @@
 **Shoyz Tools** is a comprehensive **Vencord** plugin that transforms your Discord experience. 
 **More than just a badge hider, it's an all-in-one tool suite** for customization, moderation, OSINT, and productivity.
 
-📖 **[Lire en français](README.fr.md)**
-
 ## OSINT Features
 
 Shoyz Tools includes powerful OSINT (Open Source Intelligence) capabilities inspired by Void-Tools, designed for educational purposes and public data analysis only.
@@ -357,7 +355,6 @@ Found a bug? Please use our [bug report template](.github/ISSUE_TEMPLATE/bug_rep
 - **Void-Tools** for OSINT presentation inspiration
 - All contributors and testers
 - The Discord community for support
-- **YOU** for using this plugin!
 
 ---
 
