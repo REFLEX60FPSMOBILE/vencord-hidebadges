@@ -4,11 +4,13 @@
   "description": "Shoyz Tools - A comprehensive Discord tool suite for Vencord with OSINT capabilities, badge management, UI customization, and server analysis",
   "main": "dist/index.js",
   "scripts": {
-    "build": "vencord build",
-    "inject": "vencord inject",
-    "dev": "vencord build --watch",
+    "build": "echo 'Build handled by Vencord root build system' && exit 0",
+    "inject": "echo 'Inject handled by Vencord root build system' && exit 0",
+    "dev": "echo 'Dev mode handled by Vencord root build system' && exit 0",
     "lint": "eslint src --ext .ts,.tsx",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "keywords": [
     "vencord",
@@ -26,23 +28,28 @@
   "license": "GPL-3.0-or-later",
   "repository": {
     "type": "git",
-    "url": "https://github.com/REFLEX60FPSMOBILE/shoyz-tools"
+    "url": "https://github.com/REFLEX60FPSMOBILE/vencord-hidebadges"
   },
   "bugs": {
-    "url": "https://github.com/REFLEX60FPSMOBILE/shoyz-tools/issues"
+    "url": "https://github.com/REFLEX60FPSMOBILE/vencord-hidebadges/issues"
   },
-  "homepage": "https://github.com/REFLEX60FPSMOBILE/shoyz-tools#readme",
+  "homepage": "https://github.com/REFLEX60FPSMOBILE/vencord-hidebadges#readme",
   "dependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@types/node": "^20.0.0",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
-    "typescript": "^5.0.0",
-    "eslint": "^8.0.0",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
-    "@typescript-eslint/parser": "^6.0.0"
+    "@typescript-eslint/parser": "^6.0.0",
+    "@vitest/ui": "^1.0.0",
+    "eslint": "^8.0.0",
+    "eslint-plugin-react": "^7.33.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "typescript": "^5.0.0",
+    "vitest": "^1.0.0"
   },
   "vencord": {
     "id": "shoyzTools",
