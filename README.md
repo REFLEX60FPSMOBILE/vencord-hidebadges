@@ -4,7 +4,7 @@
 
 [![License: GPL-3.0](https://img.shields.io/badge/License-GPL--3.0-blue.svg)](https://github.com/REFLEX60FPSMOBILE/vencord-hidebadges/blob/main/LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-100%25-blue)](https://www.typescriptlang.org/)
-[![Discord](https://img.shields.io/badge/Discord-Join%20Us-5865F2)](https://discord.gg/nightsmpp)
+[![Discord](https://img.shields.io/badge/Discord-Join%20Us-5865F2)](https://discord.gg/jGXd8adHPJ)
 
 ## 🌟 Overview
 
@@ -12,7 +12,7 @@
 
 ## 🌟 Key Features
 
-### Module OSINT Éducatif & Avancé (Style Void-Tools)
+### Educational OSINT Module (Void-Tools Style)
 - **User Lookup**: Complete user dossiers with multiple tabs, threat score system (0-100), risk level indicators (SAFE, LOW, MEDIUM, HIGH, CRITICAL), and public data analysis (associated accounts, history, pseudonyms).
 - **Server Analysis**: Server security evaluation, risk factor analysis, and detailed reports.
 - **Message Scanner**: Real-time message analysis, link extraction and classification, threat detection, and suspicious keyword detection.
@@ -30,7 +30,7 @@
 
 Join the official **Shoyz Tools** Discord server for support, updates, and community discussions:
 
-**[https://discord.gg/56YDGN2tZc](https://discord.gg/56YDGN2tZc)**
+**[discord.gg/jGXd8adHPJ](https://discord.gg/jGXd8adHPJ)**
 
 ## 📦 Installation
 
@@ -43,7 +43,7 @@ Join the official **Shoyz Tools** Discord server for support, updates, and commu
 
 - **Changelog**: [CHANGELOG.md](./CHANGELOG.md)
 - **Features**: See the Features section above
-- **Support**: Join our [Discord](https://discord.gg/56YDGN2tZc)
+- **Support**: Join our [Discord](https://discord.gg/jGXd8adHPJ)
 
 ## 🛡️ License
 
